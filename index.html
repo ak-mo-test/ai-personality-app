@@ -30,19 +30,24 @@ body {
 }
 .add-btn {
   background: #22c55e;
+  color: white;
   border: none;
-  padding: 6px 10px;
+  padding: 8px 16px;
   border-radius: 8px;
   font-weight: 600;
   cursor: pointer;
+  transition: opacity 0.2s;
 }
+.add-btn:hover { opacity: 0.9; }
 .person-row {
   border: 1px solid #1e293b;
   border-radius: 14px;
   padding: 12px;
   margin-top: 12px;
   background: #020617;
+  transition: border-color 0.3s;
 }
+.person-row:hover { border-color: #374151; }
 .row-header {
   display: flex;
   justify-content: space-between;
@@ -66,9 +71,12 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 4px;
+  border-radius: 4px;
 }
+.edit:hover { background: rgba(255,255,255,0.1); }
 .expand {
-  transition: 0.3s;
+  transition: transform 0.3s;
 }
 .person-row.open .expand {
   transform: rotate(90deg);
@@ -79,6 +87,7 @@ body {
   font-size: 13px;
   opacity: 0.75;
   white-space: pre-wrap;
+  line-height: 1.5;
 }
 .person-row.open .row-body {
   display: block;
@@ -90,29 +99,43 @@ body {
 .top {
   display: flex;
   gap: 8px;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   align-items: center;
   position: relative;
 }
 .top input {
   flex: 1;
-  padding: 14px;
+  padding: 14px 18px;
   border-radius: 12px;
-  border: none;
+  border: 1px solid #374151;
   font-size: 16px;
-  white-space: pre-wrap;
+  background: #020617;
+  color: white;
+  font-family: inherit;
+}
+.top input:focus {
+  outline: none;
+  border-color: #22c55e;
 }
 .top button {
-  padding: 14px 22px;
+  padding: 14px 24px;
   border-radius: 12px;
   border: none;
   background: #22c55e;
+  color: white;
   font-size: 16px;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 8px;
+  transition: opacity 0.2s;
+}
+.top button:hover { opacity: 0.9; }
+.top button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 .gear {
   font-size: 20px;
@@ -123,12 +146,11 @@ body {
   margin-left: 6px;
   display: flex;
   align-items: center;
+  padding: 8px;
+  border-radius: 8px;
 }
-#settings {
-  background-color: transparent;
-  padding: 0;
-  font-size: 24px;
-}
+.gear:hover { background: rgba(255,255,255,0.1); }
+#settings { background-color: transparent; padding: 0; }
 .popup {
   position: absolute;
   top: 50px;
@@ -136,23 +158,29 @@ body {
   background: #020617;
   border: 1px solid #1e293b;
   border-radius: 12px;
-  padding: 12px;
+  padding: 16px;
   display: none;
   z-index: 100;
+  min-width: 180px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 .popup label {
-  margin-right: 6px;
+  display: block;
+  margin-bottom: 8px;
   font-size: 14px;
+  opacity: 0.8;
 }
 .popup select {
+  width: 100%;
   background: #020617;
   color: white;
-  border: 1px solid #1e293b;
+  border: 1px solid #374151;
   border-radius: 8px;
-  padding: 6px;
+  padding: 8px 12px;
   font-size: 14px;
   cursor: pointer;
 }
+.popup select:focus { outline: none; border-color: #22c55e; }
 .responses {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -161,50 +189,77 @@ body {
 .card {
   background: #020617;
   border-radius: 18px;
-  padding: 18px;
+  padding: 20px;
   border-left: 6px solid;
   white-space: pre-wrap;
+  line-height: 1.6;
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+}
+.card strong {
+  display: block;
+  margin-bottom: 12px;
+  font-size: 18px;
+}
+.card small {
+  opacity: 0.7;
+  font-size: 12px;
 }
 .modal {
   position: fixed;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.8);
   display: none;
   justify-content: center;
   align-items: center;
+  z-index: 1000;
 }
 .modal-content {
   background: #020617;
-  padding: 20px;
+  padding: 24px;
   border-radius: 16px;
-  width: 340px;
+  width: 400px;
+  max-width: 90vw;
+  border: 1px solid #374151;
+}
+.modal-content h3 {
+  margin-top: 0;
+  margin-bottom: 20px;
 }
 .modal-content input,
 .modal-content textarea,
 .modal-content select {
   width: 100%;
-  margin-top: 10px;
-  padding: 8px;
-  background: #020617;
-  border: 1px solid #1e293b;
+  margin-bottom: 16px;
+  padding: 12px;
+  background: #0b1220;
+  border: 1px solid #374151;
   color: white;
   border-radius: 8px;
+  font-family: inherit;
+}
+.modal-content textarea {
+  min-height: 100px;
+  resize: vertical;
 }
 .modal-content button {
-  margin-top: 14px;
+  margin-top: 8px;
   width: 100%;
-  padding: 10px;
+  padding: 12px;
   background: #22c55e;
+  color: white;
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  font-weight: 600;
+  font-size: 16px;
 }
+.modal-content button:hover { opacity: 0.9; }
 .loader {
-  border: 3px solid #f3f3f3;
+  border: 3px solid rgba(243, 243, 243, 0.2);
   border-top: 3px solid #22c55e;
   border-radius: 50%;
-  width: 18px;
-  height: 18px;
+  width: 20px;
+  height: 20px;
   animation: spin 1s linear infinite;
   display: inline-block;
   vertical-align: middle;
@@ -213,185 +268,283 @@ body {
   0% { transform: rotate(0deg);}
   100% { transform: rotate(360deg);}
 }
+.status {
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  margin-top: 10px;
+}
+.status.success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+.status.error { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
 @media (max-width: 768px) {
   .wrapper { grid-template-columns: 1fr; }
+  .sidebar { border-right: none; border-bottom: 1px solid #1e293b; }
   .popup { right: 10px; top: 60px; }
+  .responses { grid-template-columns: 1fr; }
 }
 </style>
 </head>
 <body>
 <div class="wrapper">
-<div class="sidebar">
-  <div class="sidebar-header">
-    <h3>Personalities</h3>
-    <button class="add-btn" onclick="addPersonality()">+ Add</button>
-  </div>
-  <div id="list"></div>
-</div>
-<div class="main">
-  <div class="top">
-    <input id="question" placeholder="Ask something..." />
-    <button id="runBtn" onclick="run()">Run</button>
-    <button class="gear" id="settings" onclick="togglePopup()">  
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="25px" height="25px">
-        <path fill="white" d="M47.16,21.221l-5.91-0.966c-0.346-1.186-0.819-2.326-1.411-3.405l3.45-4.917c0.279-0.397,0.231-0.938-0.112-1.282
-        l-3.889-3.887c-0.347-0.346-0.893-0.391-1.291-0.104l-4.843,3.481c-1.089-0.602-2.239-1.08-3.432-1.427l-1.031-5.886
-        C28.607,2.35,28.192,2,27.706,2h-5.5c-0.49,0-0.908,0.355-0.987,0.839l-0.956,5.854c-1.2,0.345-2.352,0.818-3.437,1.412l-4.83-3.45
-        c-0.399-0.285-0.942-0.239-1.289,0.106L6.82,10.648c-0.343,0.343-0.391,0.883-0.112,1.28l3.399,4.863
-        c-0.605,1.095-1.087,2.254-1.438,3.46l-5.831,0.971c-0.482,0.08-0.836,0.498-0.836,0.986v5.5c0,0.485,0.348,0.9,0.825,0.985
-        l5.831,1.034c0.349,1.203,0.831,2.362,1.438,3.46l-3.441,4.813c-0.284,0.397-0.239,0.942,0.106,1.289l3.888,3.891
-        c0.343,0.343,0.884,0.391,1.281,0.112l4.87-3.411c1.093,0.601,2.248,1.078,3.445,1.424l0.976,5.861C21.3,47.647,21.717,48,22.206,48
-        h5.5c0.485,0,0.9-0.348,0.984-0.825l1.045-5.89c1.199-0.353,2.348-0.833,3.43-1.435l4.905,3.441
-        c0.398,0.281,0.938,0.232,1.282-0.111l3.888-3.891c0.346-0.347,0.391-0.894,0.104-1.292l-3.498-4.857
-        c0.593-1.08,1.064-2.222,1.407-3.408l5.918-1.039c0.479-0.084,0.827-0.5,0.827-0.985v-5.5C47.999,21.718,47.644,21.3,47.16,21.221z
-         M25,32c-3.866,0-7-3.134-7-7c0-3.866,3.134-7,7-7s7,3.134,7,7C32,28.866,28.866,32,25,32z"/>
-    </svg>
-    </button>
-    <div class="popup" id="popup">
-      <label>Direction:</label>
-      <select id="dirSelect" onchange="changeDirection()">
-        <option value="ltr">LTR</option>
-        <option value="rtl">RTL</option>
-      </select>
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h3>Personalities</h3>
+      <button class="add-btn" onclick="addPersonality()">+ Add New</button>
     </div>
+    <div id="list"></div>
   </div>
-  <div id="responses" class="responses"></div>
-</div>
+  
+  <div class="main">
+    <div class="top">
+      <input id="question" placeholder="Ask something from all personalities..." />
+      <button id="runBtn" onclick="run()">Run All</button>
+      <button class="gear" id="settings" onclick="togglePopup()" title="Settings">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="25" height="25">
+          <path fill="white" d="M47.16 21.221l-5.91-.966c-.346-1.186-.819-2.326-1.411-3.405l3.45-4.917c.279-.397.231-.938-.112-1.282l-3.889-3.887c-.347-.346-.893-.391-1.291-.104l-4.843 3.481c-1.089-.602-2.239-1.08-3.432-1.427l-1.031-5.886C28.607 2.35 28.192 2 27.706 2h-5.5c-.49 0-.908.355-.987.839l-.956 5.854c-1.2.345-2.352.818-3.437 1.412l-4.83-3.45c-.399-.285-.942-.239-1.289.106L6.82 10.648c-.343.343-.391.883-.112 1.28l3.399 4.863c-.605 1.095-1.087 2.254-1.438 3.46l-5.831.971c-.482.08-.836.498-.836.986v5.5c0 .485.348.9.825.985l5.831 1.034c.349 1.203.831 2.362 1.438 3.46l-3.441 4.813c-.284.397-.239.942.106 1.289l3.888 3.891c.343.343.884.391 1.281.112l4.87-3.411c1.093.601 2.248 1.078 3.445 1.424l.976 5.861C21.3 47.647 21.717 48 22.206 48h5.5c.485 0 .9-.348.984-.825l1.045-5.89c1.199-.353 2.348-.833 3.43-1.435l4.905 3.441c.398.281.938.232 1.282-.111l3.888-3.891c.346-.347.391-.894.104-1.292l-3.498-4.857c.593-1.08 1.064-2.222 1.407-3.408l5.918-1.039c.479-.084.827-.5.827-.985v-5.5c0-.482-.355-.9-.839-.979zM25 32c-3.866 0-7-3.134-7-7 0-3.866 3.134-7 7-7s7 3.134 7 7c0 3.866-3.134 7-7 7z"/>
+        </svg>
+      </button>
+      <div class="popup" id="popup">
+        <label>Text Direction:</label>
+        <select id="dirSelect" onchange="changeDirection()">
+          <option value="ltr">Left to Right (LTR)</option>
+          <option value="rtl">Right to Left (RTL)</option>
+        </select>
+      </div>
+    </div>
+    
+    <div id="status" class="status"></div>
+    
+    <div id="responses" class="responses"></div>
+  </div>
 </div>
 
 <div class="modal" id="modal">
   <div class="modal-content">
     <h3>Edit Personality</h3>
-    <input id="mName" placeholder="Name">
+    <input id="mName" placeholder="Personality Name">
     <input id="mIcon" placeholder="Icon (emoji)">
-    <input id="mColor" placeholder="Color (#hex)">
+    <input id="mColor" placeholder="Color (#hex code)">
     <select id="mModel">
-      <option>openai/gpt-oss-20b:free</option>
-      <option>google/gemma-3-27b-it:free</option>
-      <option>mistralai/devstral-2512:free</option>
-      <option>tngtech/deepseek-r1t2-chimera:free</option>
-      <option>nvidia/nemotron-nano-12b-v2-vl:free</option>
-      <option>qwen/qwen3-coder:free</option>
+      <option value="openai/gpt-oss-20b:free">GPT OSS 20B (Free)</option>
+      <option value="google/gemma-3-27b-it:free">Gemma 3 27B (Free)</option>
+      <option value="mistralai/devstral-2512:free">Devstral 25B (Free)</option>
+      <option value="tngtech/deepseek-r1t2-chimera:free">DeepSeek R1 Chimera (Free)</option>
+      <option value="nvidia/nemotron-nano-12b-v2-vl:free">Nemotron Nano 12B (Free)</option>
+      <option value="qwen/qwen3-coder:free">Qwen Coder (Free)</option>
     </select>
-    <textarea id="mPrompt" rows="4" placeholder="Prompt"></textarea>
-    <button onclick="savePersonality()">Save</button>
+    <textarea id="mPrompt" rows="4" placeholder="System prompt and behavior description"></textarea>
+    <button onclick="savePersonality()">Save Changes</button>
   </div>
 </div>
-<script>
-const API_URL = "https://ai-openrouter-proxy.abolfazl-kbahrami-ec0.workers.dev";
 
+<script>
+// Configuration
+const API_URL = "https://ai-openrouter-proxy.abolfazl-kbahrami-ec0.workers.dev";
+// یا اگر Worker جدید ساختی:
+// const API_URL = "https://your-worker-name.your-account.workers.dev";
+
+// Data
 let personalities = [
-  { name:"Creative", icon:"🎨", color:"#fb7185", model:"openai/gpt-oss-20b:free", prompt:"Generate creative ideas." },
-  { name:"Logical", icon:"🧠", color:"#38bdf8", model:"tngtech/deepseek-r1t2-chimera:free", prompt:"Think step by step logically." },
-  { name:"Summary", icon:"📌", color:"#a78bfa", model:"mistralai/devstral-2512:free", prompt:"Summarize all responses clearly." }
+  {
+    name: "Creative Assistant",
+    icon: "🎨",
+    color: "#fb7185",
+    model: "openai/gpt-oss-20b:free",
+    prompt: "You are a creative assistant. Generate innovative ideas, creative solutions, and think outside the box. Be imaginative and original in your responses."
+  },
+  {
+    name: "Logical Thinker",
+    icon: "🧠",
+    color: "#38bdf8",
+    model: "tngtech/deepseek-r1t2-chimera:free",
+    prompt: "You are a logical thinker. Analyze problems step by step, provide structured reasoning, and give clear, rational explanations. Avoid emotional language."
+  },
+  {
+    name: "Summarizer",
+    icon: "📌",
+    color: "#a78bfa",
+    model: "mistralai/devstral-2512:free",
+    prompt: "You are a summarizer. Take complex information and distill it into clear, concise summaries. Focus on key points and main ideas. Keep it brief but comprehensive."
+  }
 ];
 
 let editIndex = null;
 
+// DOM Elements
+const list = document.getElementById('list');
+const question = document.getElementById('question');
+const runBtn = document.getElementById('runBtn');
+const responses = document.getElementById('responses');
+const popup = document.getElementById('popup');
+const modal = document.getElementById('modal');
+const dirSelect = document.getElementById('dirSelect');
+const mName = document.getElementById('mName');
+const mIcon = document.getElementById('mIcon');
+const mColor = document.getElementById('mColor');
+const mModel = document.getElementById('mModel');
+const mPrompt = document.getElementById('mPrompt');
+const statusEl = document.getElementById('status');
+
+// Render personality list
 function renderList() {
   list.innerHTML = "";
-  personalities.forEach((p,i) => {
+  personalities.forEach((p, i) => {
     const row = document.createElement("div");
     row.className = "person-row";
     row.innerHTML = `
-      <div class="row-header" onclick="row.classList.toggle('open')">
+      <div class="row-header" onclick="this.parentNode.classList.toggle('open')">
         <div class="row-left">
-          <span>${p.icon}</span><strong>${p.name}</strong>
+          <span style="font-size: 20px">${p.icon}</span>
+          <strong>${p.name}</strong>
         </div>
         <div class="actions">
           <span class="expand">➜</span>
-          <span class="edit" onclick="event.stopPropagation(); openModal(${i})">✏️</span>
+          <span class="edit" onclick="event.stopPropagation(); openModal(${i})" title="Edit">✏️</span>
         </div>
       </div>
       <div class="row-body">
-        Model: ${p.model}<br>
-        ${p.prompt}
+        <div><strong>Model:</strong> ${p.model}</div>
+        <div><strong>Prompt:</strong> ${p.prompt}</div>
       </div>
     `;
     list.appendChild(row);
   });
 }
 
+// Open edit modal
 function openModal(i) {
   editIndex = i;
   const p = personalities[i];
   mName.value = p.name;
   mIcon.value = p.icon;
   mColor.value = p.color;
-  mPrompt.value = p.prompt;
   mModel.value = p.model;
+  mPrompt.value = p.prompt;
   modal.style.display = "flex";
 }
 
+// Save personality changes
 function savePersonality() {
+  if (editIndex === null) return;
+  
   personalities[editIndex] = {
-    name: mName.value,
-    icon: mIcon.value,
-    color: mColor.value,
+    name: mName.value.trim() || "Unnamed",
+    icon: mIcon.value.trim() || "🤖",
+    color: mColor.value.trim() || "#22c55e",
     model: mModel.value,
-    prompt: mPrompt.value
+    prompt: mPrompt.value.trim() || "No prompt provided."
   };
+  
   modal.style.display = "none";
   renderList();
+  showStatus("Personality saved successfully!", "success");
 }
 
+// Add new personality
 function addPersonality() {
   personalities.push({
-    name:"New AI",
-    icon:"🤖",
-    color:"#22c55e",
-    model:"openai/gpt-oss-20b:free",
-    prompt:"Describe behavior here."
+    name: "New Personality",
+    icon: "🤖",
+    color: "#22c55e",
+    model: "openai/gpt-oss-20b:free",
+    prompt: "Describe your personality and behavior here..."
   });
+  
   renderList();
+  openModal(personalities.length - 1);
+  showStatus("New personality added!", "success");
 }
 
-renderList();
-
+// Call AI API
 async function callAI(p, input) {
   try {
-    const res = await fetch(API_URL, {
+    console.log(`Calling ${p.name} with model: ${p.model}`);
+    
+    const response = await fetch(API_URL, {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json"
+      },
       body: JSON.stringify({
         model: p.model,
         messages: [
           { role: "system", content: p.prompt },
           { role: "user", content: input }
-        ]
+        ],
+        max_tokens: 1000,
+        temperature: 0.7
       })
     });
-    const data = await res.json();
-    return data.choices?.[0]?.message?.content || "No response";
-  } catch (e) {
-    return "Error fetching response";
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error?.message || `API Error ${response.status}`);
+    }
+    
+    if (data.choices && data.choices[0] && data.choices[0].message) {
+      return data.choices[0].message.content;
+    } else if (data.error) {
+      return `Error: ${data.error.message}`;
+    } else {
+      return "No response generated.";
+    }
+    
+  } catch (error) {
+    console.error(`Error in ${p.name}:`, error);
+    return `Error: ${error.message}`;
   }
 }
 
+// Run all personalities
 async function run() {
-  const btn = document.getElementById("runBtn");
-  btn.disabled = true;
-  btn.innerHTML = 'Running <span class="loader"></span>';
+  const input = question.value.trim();
+  if (!input) {
+    showStatus("Please enter a question first!", "error");
+    question.focus();
+    return;
+  }
+  
+  // Disable button and show loading
+  runBtn.disabled = true;
+  runBtn.innerHTML = 'Running <span class="loader"></span>';
   responses.innerHTML = "";
-
+  showStatus("Processing your request...", "success");
+  
   const dir = dirSelect.value;
-
-  for (let p of personalities) {
+  
+  // Process each personality sequentially
+  for (let i = 0; i < personalities.length; i++) {
+    const p = personalities[i];
+    
+    // Create card
     const card = document.createElement("div");
     card.className = "card";
     card.style.borderColor = p.color;
     card.style.textAlign = dir === "rtl" ? "right" : "left";
-    card.innerHTML = `<strong>${p.icon} ${p.name} <small>(${p.model})</small></strong><p>Loading...</p>`;
+    card.innerHTML = `
+      <strong>${p.icon} ${p.name} <small>(${p.model})</small></strong>
+      <p><i>Loading...</i></p>
+    `;
     responses.appendChild(card);
-
-    const text = await callAI(p, question.value);
+    
+    // Get response
+    const text = await callAI(p, input);
+    
+    // Update card
     card.querySelector('p').innerText = text;
   }
-
-  btn.disabled = false;
-  btn.innerHTML = 'Run';
+  
+  // Re-enable button
+  runBtn.disabled = false;
+  runBtn.innerHTML = 'Run All';
+  showStatus(`Responses generated for ${personalities.length} personalities`, "success");
+  
+  // Scroll to responses
+  responses.scrollIntoView({ behavior: "smooth", block: "nearest" });
 }
 
+// UI Helpers
 function togglePopup() {
   popup.style.display = popup.style.display === "flex" ? "none" : "flex";
 }
@@ -404,10 +557,38 @@ function changeDirection() {
   });
 }
 
+function showStatus(message, type) {
+  statusEl.textContent = message;
+  statusEl.className = `status ${type}`;
+  statusEl.style.display = "block";
+  
+  if (type !== "error") {
+    setTimeout(() => {
+      statusEl.style.display = "none";
+    }, 3000);
+  }
+}
+
+// Event Listeners
 question.addEventListener("keypress", function(e) {
   if (e.key === "Enter" && !e.shiftKey) {
     e.preventDefault();
     run();
   }
 });
+
+// Close modals on outside click
+window.addEventListener('click', (e) => {
+  if (e.target === modal) {
+    modal.style.display = 'none';
+  }
+  if (!popup.contains(e.target) && e.target.id !== 'settings') {
+    popup.style.display = 'none';
+  }
+});
+
+// Initialize
+renderList();
 </script>
+</body>
+</html>
