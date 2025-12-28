@@ -2,220 +2,327 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>AI Pipeline Studio - Mobile Workspace</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Pipeline Studio</title>
 <style>
+/* ===== VARIABLES ===== */
 :root {
-  --primary: #6366f1;
-  --primary-dark: #4f46e5;
+  --primary: #3b82f6;
+  --primary-dark: #2563eb;
   --success: #10b981;
-  --warning: #f59e0b;
+  --success-dark: #059669;
   --danger: #ef4444;
+  --danger-dark: #dc2626;
+  --warning: #f59e0b;
   --bg-dark: #0f172a;
   --bg-card: #1e293b;
-  --bg-surface: #334155;
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
+  --bg-light: #334155;
+  --text: #f1f5f9;
+  --text-light: #94a3b8;
   --border: #475569;
 }
 
+/* ===== RESET & BASE ===== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  -webkit-tap-highlight-color: transparent;
 }
 
 body {
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  font-family: system-ui, -apple-system, sans-serif;
   background: var(--bg-dark);
-  color: var(--text-primary);
+  color: var(--text);
   height: 100vh;
   overflow: hidden;
-  touch-action: pan-x pan-y;
 }
 
-/* Mobile Layout */
-.app-container {
+/* ===== APP LAYOUT ===== */
+.app {
+  display: flex;
+  height: 100vh;
+}
+
+/* ===== SIDEBAR ===== */
+.sidebar {
+  width: 300px;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  max-width: 100vw;
+  flex-shrink: 0;
 }
 
-/* Header */
-.header {
-  background: var(--bg-card);
-  padding: 12px 16px;
+.sidebar-header {
+  padding: 20px;
   border-bottom: 1px solid var(--border);
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  position: sticky;
-  top: 0;
-  z-index: 100;
+  align-items: flex-start;
+  min-height: 80px;
 }
 
-.logo {
+.sidebar-header h2 {
+  font-size: 18px;
   display: flex;
   align-items: center;
   gap: 10px;
-  font-weight: 700;
-  font-size: 18px;
+  flex-wrap: wrap;
 }
 
-.logo-icon {
-  width: 32px;
-  height: 32px;
-  background: var(--primary);
-  border-radius: 8px;
+.header-buttons {
   display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.header-actions {
-  display: flex;
+  flex-direction: column;
   gap: 8px;
+  margin-left: 10px;
 }
 
-.btn {
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: none;
-  background: var(--primary);
+.add-btn {
+  background: var(--success);
   color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-weight: 600;
-  font-size: 14px;
   cursor: pointer;
   transition: all 0.2s;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
+  font-size: 12px;
   white-space: nowrap;
 }
 
-.btn:hover {
-  background: var(--primary-dark);
-  transform: translateY(-1px);
+.add-btn:hover {
+  background: var(--success-dark);
 }
 
-.btn-sm {
-  padding: 8px 12px;
-  font-size: 13px;
-}
-
-.btn-success {
-  background: var(--success);
-}
-
-.btn-warning {
-  background: var(--warning);
-}
-
-.btn-danger {
+.clear-btn {
   background: var(--danger);
-}
-
-/* Main Content Area */
-.main-content {
-  flex: 1;
-  display: flex;
-  overflow: hidden;
-  position: relative;
-}
-
-/* Sidebar (Hidden on mobile, shown via toggle) */
-.sidebar {
-  width: 280px;
-  background: var(--bg-card);
-  border-right: 1px solid var(--border);
-  overflow-y: auto;
-  display: none;
-  flex-direction: column;
-  gap: 16px;
-  padding: 16px;
-  position: absolute;
-  height: 100%;
-  z-index: 90;
-  left: 0;
-  top: 0;
-}
-
-.sidebar.active {
-  display: flex;
-}
-
-.sidebar-section {
-  background: var(--bg-surface);
-  border-radius: 12px;
-  padding: 16px;
-}
-
-.section-title {
-  font-size: 14px;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
   font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.clear-btn:hover {
+  background: var(--danger-dark);
+}
+
+.sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+/* ===== MODEL LIST ===== */
+.model-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.model-item {
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+  cursor: grab;
+  transition: all 0.2s;
+  user-select: none;
+}
+
+.model-item:hover {
+  transform: translateX(5px);
+  border-color: var(--primary);
+}
+
+.model-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 8px;
 }
 
-/* Workspace Canvas */
+.model-icon {
+  width: 32px;
+  height: 32px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.model-name {
+  font-weight: 600;
+  font-size: 14px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.model-edit {
+  color: var(--text-light);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.model-edit:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+.model-type {
+  font-size: 12px;
+  color: var(--text-light);
+  background: rgba(59, 130, 246, 0.1);
+  padding: 2px 8px;
+  border-radius: 4px;
+  display: inline-block;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.model-preview {
+  margin-top: 8px;
+  font-size: 12px;
+  color: var(--text-light);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ===== SETTINGS ===== */
+.settings {
+  margin-top: 30px;
+}
+
+.settings h3 {
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.setting-item {
+  margin-bottom: 15px;
+}
+
+.setting-item label {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 5px;
+  color: var(--text-light);
+}
+
+.setting-item input,
+.setting-item select {
+  width: 100%;
+  padding: 8px 12px;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  font-size: 14px;
+}
+
+.setting-item input:focus,
+.setting-item select:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+/* ===== WORKSPACE ===== */
 .workspace {
   flex: 1;
   position: relative;
   overflow: auto;
   background: 
-    linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)),
-    repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 19px,
-      rgba(71, 85, 105, 0.1) 19px,
-      rgba(71, 85, 105, 0.1) 20px
-    ),
-    repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 19px,
-      rgba(71, 85, 105, 0.1) 19px,
-      rgba(71, 85, 105, 0.1) 20px
-    );
+    linear-gradient(rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 0.95)),
+    repeating-linear-gradient(0deg, transparent, transparent 19px, rgba(71, 85, 105, 0.1) 20px),
+    repeating-linear-gradient(90deg, transparent, transparent 19px, rgba(71, 85, 105, 0.1) 20px);
   background-size: 100% 100%, 20px 20px, 20px 20px;
-  min-height: calc(100vh - 140px);
-  padding: 20px;
 }
 
-/* AI Node Styles */
-.ai-node {
+/* ===== NODE STYLES ===== */
+.node {
   position: absolute;
-  width: 260px;
   background: var(--bg-card);
-  border-radius: 14px;
   border: 2px solid var(--border);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  border-radius: 12px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
   z-index: 10;
-  transition: all 0.3s ease;
-  touch-action: none;
+  cursor: move;
+  resize: both;
+  overflow: hidden;
+  min-width: 200px;
+  min-height: 150px;
 }
 
-.ai-node:hover {
+.node:hover {
   border-color: var(--primary);
-  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+  box-shadow: 0 12px 30px rgba(59, 130, 246, 0.2);
+}
+
+.node.executing {
+  border-color: var(--warning);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(245, 158, 11, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+}
+
+/* حذف transition برای حرکت نرم‌تر */
+.dragging {
+  transition: none !important;
+}
+
+/* Custom resize handle */
+.resize-handle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  width: 20px;
+  height: 20px;
+  cursor: nwse-resize;
+  background: linear-gradient(135deg, transparent 50%, var(--primary) 50%);
+  border-radius: 0 0 12px 0;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.node:hover .resize-handle {
+  opacity: 0.5;
+}
+
+.resize-handle:hover {
+  opacity: 1 !important;
 }
 
 .node-header {
-  padding: 14px;
+  padding: 16px;
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 14px 14px 0 0;
+  cursor: move;
+  user-select: none;
 }
 
 .node-title {
@@ -229,7 +336,7 @@ body {
 .node-icon {
   width: 36px;
   height: 36px;
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -239,6 +346,7 @@ body {
 
 .node-text {
   min-width: 0;
+  flex: 1;
 }
 
 .node-name {
@@ -251,25 +359,26 @@ body {
 
 .node-model {
   font-size: 12px;
-  color: var(--text-secondary);
+  color: var(--text-light);
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  margin-top: 2px;
 }
 
 .node-actions {
   display: flex;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
 .node-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: var(--bg-surface);
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: var(--bg-light);
   border: none;
-  color: var(--text-secondary);
+  color: var(--text);
   cursor: pointer;
   display: flex;
   align-items: center;
@@ -284,28 +393,31 @@ body {
 }
 
 .node-body {
-  padding: 14px;
+  padding: 16px;
   font-size: 13px;
-  color: var(--text-secondary);
+  color: var(--text-light);
   line-height: 1.5;
-  max-height: 100px;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
+  height: calc(100% - 130px);
+  overflow: auto;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .node-connectors {
   display: flex;
   justify-content: space-between;
-  padding: 10px 14px;
+  padding: 12px 16px;
   border-top: 1px solid var(--border);
+  background: rgba(0,0,0,0.1);
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
 }
 
 .connector {
-  width: 40px;
-  height: 40px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -313,6 +425,7 @@ body {
   cursor: pointer;
   position: relative;
   transition: all 0.2s;
+  border: 2px solid white;
 }
 
 .connector:hover {
@@ -334,32 +447,33 @@ body {
 
 .connector-label {
   position: absolute;
-  top: -20px;
-  font-size: 10px;
-  background: rgba(0, 0, 0, 0.8);
-  padding: 2px 6px;
+  top: -24px;
+  font-size: 11px;
+  background: var(--bg-card);
+  padding: 4px 8px;
   border-radius: 4px;
   white-space: nowrap;
   opacity: 0;
   transition: opacity 0.2s;
+  border: 1px solid var(--border);
 }
 
 .connector:hover .connector-label {
   opacity: 1;
 }
 
-/* Connection Lines */
-.connection-line {
+/* ===== CONNECTION LINES ===== */
+.connection {
   position: absolute;
   pointer-events: none;
   z-index: 5;
 }
 
-.connection-line svg {
+.connection svg {
   overflow: visible;
 }
 
-.connection-line path {
+.connection path {
   stroke: var(--primary);
   stroke-width: 3;
   fill: none;
@@ -373,101 +487,205 @@ body {
   }
 }
 
-/* Response Panel */
-.response-panel {
+/* ===== CHAT PANEL ===== */
+.chat-panel {
+  width: 350px;
   background: var(--bg-card);
-  border-top: 1px solid var(--border);
-  max-height: 40vh;
+  border-left: 1px solid var(--border);
   display: flex;
   flex-direction: column;
-}
-
-.response-header {
-  padding: 12px 16px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  border-bottom: 1px solid var(--border);
-}
-
-.response-content {
-  flex: 1;
-  overflow-y: auto;
-  padding: 16px;
-}
-
-.response-item {
-  background: var(--bg-surface);
-  border-radius: 10px;
-  padding: 12px;
-  margin-bottom: 10px;
-  border-left: 4px solid var(--primary);
-}
-
-.response-title {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.response-name {
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.response-time {
-  font-size: 11px;
-  color: var(--text-secondary);
-}
-
-.response-text {
-  font-size: 13px;
-  line-height: 1.5;
-  white-space: pre-wrap;
-  max-height: 150px;
-  overflow-y: auto;
-}
-
-/* Bottom Navigation */
-.bottom-nav {
-  background: var(--bg-card);
-  border-top: 1px solid var(--border);
-  padding: 10px 16px;
-  display: flex;
-  gap: 8px;
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-.nav-btn {
-  padding: 10px 14px;
-  border-radius: 10px;
-  background: var(--bg-surface);
-  border: none;
-  color: var(--text-primary);
-  font-size: 13px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  white-space: nowrap;
   flex-shrink: 0;
 }
 
-.nav-btn.active {
-  background: var(--primary);
-  color: white;
+.chat-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-shrink: 0;
 }
 
-/* Modal */
-.modal-overlay {
+.chat-header h3 {
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  min-height: 0;
+}
+
+/* ===== MESSAGES ===== */
+.message {
+  display: flex;
+  flex-direction: column;
+  max-width: 90%;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-user {
+  align-self: flex-end;
+}
+
+.message-ai {
+  align-self: flex-start;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.message-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+
+.message-name {
+  font-size: 13px;
+  font-weight: 600;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.message-time {
+  font-size: 11px;
+  color: var(--text-light);
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.message-bubble {
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+.message-user .message-bubble {
+  background: var(--primary);
+  color: white;
+  border-radius: 14px 14px 0 14px;
+}
+
+.message-ai .message-bubble {
+  background: var(--bg-light);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 14px 14px 14px 0;
+}
+
+/* ===== INPUT AREA ===== */
+.input-area {
+  padding: 20px;
+  border-top: 1px solid var(--border);
+  flex-shrink: 0;
+}
+
+.input-wrapper {
+  display: flex;
+  gap: 12px;
+}
+
+.input-wrapper textarea {
+  flex: 1;
+  padding: 12px 16px;
+  background: var(--bg-light);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  font-size: 14px;
+  resize: vertical;
+  min-height: 44px;
+  max-height: 120px;
+  font-family: inherit;
+}
+
+.input-wrapper textarea:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.input-wrapper button {
+  padding: 0 24px;
+  background: var(--primary);
+  border: none;
+  border-radius: 10px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-shrink: 0;
+}
+
+.input-wrapper button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.input-wrapper button:active {
+  transform: translateY(0);
+}
+
+/* ===== STATUS BAR ===== */
+.status-bar {
+  padding: 16px 20px;
+  border-top: 1px solid var(--border);
+  font-size: 13px;
+  color: var(--text-light);
+  display: flex;
+  justify-content: space-between;
+  background: var(--bg-light);
+  flex-shrink: 0;
+}
+
+.status-count {
+  display: flex;
+  gap: 20px;
+}
+
+/* ===== MODAL ===== */
+.modal {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0,0,0,0.8);
   display: none;
   align-items: center;
   justify-content: center;
@@ -475,40 +693,43 @@ body {
   padding: 20px;
 }
 
-.modal-overlay.active {
+.modal.active {
   display: flex;
 }
 
-.modal {
+.modal-content {
   background: var(--bg-card);
   border-radius: 16px;
   width: 100%;
   max-width: 500px;
   max-height: 90vh;
   overflow: hidden;
-  display: flex;
-  flex-direction: column;
+  border: 1px solid var(--border);
+  box-shadow: 0 20px 40px rgba(0,0,0,0.5);
 }
 
 .modal-header {
-  padding: 20px;
+  padding: 24px;
   border-bottom: 1px solid var(--border);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+}
+
+.modal-header h3 {
+  font-size: 20px;
+  font-weight: 600;
 }
 
 .modal-body {
-  padding: 20px;
+  padding: 24px;
   overflow-y: auto;
-  flex: 1;
+  max-height: 60vh;
 }
 
 .modal-footer {
-  padding: 20px;
+  padding: 24px;
   border-top: 1px solid var(--border);
   display: flex;
-  gap: 10px;
+  gap: 12px;
+  justify-content: flex-end;
 }
 
 .form-group {
@@ -520,17 +741,23 @@ body {
   margin-bottom: 8px;
   font-size: 14px;
   font-weight: 500;
+  color: var(--text);
 }
 
 .form-input, .form-select, .form-textarea {
   width: 100%;
-  padding: 12px;
-  border-radius: 10px;
-  background: var(--bg-surface);
+  padding: 12px 16px;
+  background: var(--bg-light);
   border: 1px solid var(--border);
-  color: var(--text-primary);
+  border-radius: 8px;
+  color: var(--text);
   font-size: 14px;
   font-family: inherit;
+}
+
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  outline: none;
+  border-color: var(--primary);
 }
 
 .form-textarea {
@@ -538,7 +765,7 @@ body {
   resize: vertical;
 }
 
-.color-grid {
+.color-options {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
   gap: 10px;
@@ -546,9 +773,9 @@ body {
 }
 
 .color-option {
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
   cursor: pointer;
   border: 2px solid transparent;
   display: flex;
@@ -556,24 +783,53 @@ body {
   justify-content: center;
   color: white;
   font-size: 16px;
+  transition: all 0.2s;
+}
+
+.color-option:hover {
+  transform: scale(1.1);
 }
 
 .color-option.selected {
   border-color: white;
   transform: scale(1.1);
+  box-shadow: 0 0 0 2px var(--primary);
 }
 
-/* Loading State */
-.loading {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
+.modal-btn {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
-.spinner {
+.modal-btn.cancel {
+  background: var(--bg-light);
+  color: var(--text);
+  border: 1px solid var(--border);
+}
+
+.modal-btn.cancel:hover {
+  background: var(--border);
+}
+
+.modal-btn.save {
+  background: var(--success);
+  color: white;
+}
+
+.modal-btn.save:hover {
+  background: var(--success-dark);
+}
+
+/* ===== LOADING ===== */
+.loader {
+  display: inline-block;
   width: 16px;
   height: 16px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
+  border: 2px solid rgba(255,255,255,0.3);
   border-radius: 50%;
   border-top-color: white;
   animation: spin 1s linear infinite;
@@ -583,463 +839,421 @@ body {
   to { transform: rotate(360deg); }
 }
 
-/* Touch-friendly improvements */
-@media (hover: none) {
-  .node-btn:hover {
-    background: var(--bg-surface);
-    color: var(--text-secondary);
+/* ===== RESPONSIVE ===== */
+@media (max-width: 1200px) {
+  .sidebar {
+    width: 280px;
   }
   
-  .node-btn:active {
-    background: var(--primary);
-    color: white;
-  }
-  
-  .connector:hover {
-    transform: none;
-  }
-  
-  .connector:active {
-    transform: scale(1.1);
+  .chat-panel {
+    width: 320px;
   }
 }
 
-/* Mobile-specific optimizations */
-@media (max-width: 768px) {
-  .workspace {
-    padding: 10px;
+@media (max-width: 900px) {
+  .app {
+    flex-direction: column;
   }
   
-  .ai-node {
-    width: 240px;
+  .sidebar {
+    width: 100%;
+    height: 250px;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
   }
   
-  .btn span {
-    display: none;
+  .sidebar-header {
+    flex-direction: column;
+    gap: 10px;
   }
   
-  .btn i {
-    margin: 0;
+  .header-buttons {
+    flex-direction: row;
+    width: 100%;
+    justify-content: flex-end;
   }
   
-  .response-panel {
-    max-height: 30vh;
+  .chat-panel {
+    width: 100%;
+    height: 300px;
+    border-left: none;
+    border-top: 1px solid var(--border);
   }
 }
 
-/* Small phones */
-@media (max-width: 480px) {
-  .header {
-    padding: 10px 12px;
-  }
-  
-  .logo-text {
-    display: none;
-  }
-  
-  .workspace {
-    padding: 8px;
-  }
-  
-  .ai-node {
-    width: 220px;
-  }
-  
-  .node-header {
-    padding: 12px;
-  }
-  
-  .node-body {
-    padding: 12px;
-  }
+/* ===== UTILITIES ===== */
+.dragging {
+  opacity: 0.7;
+  cursor: grabbing !important;
 }
 
-/* Dark mode adjustments */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --bg-dark: #0a0a0a;
-    --bg-card: #1a1a1a;
-    --bg-surface: #262626;
-    --border: #404040;
-  }
-}
-
-/* Safe area for notch phones */
-@supports (padding: max(0px)) {
-  .header {
-    padding-top: max(12px, env(safe-area-inset-top));
-    padding-left: max(16px, env(safe-area-inset-left));
-    padding-right: max(16px, env(safe-area-inset-right));
-  }
-  
-  .bottom-nav {
-    padding-bottom: max(10px, env(safe-area-inset-bottom));
-  }
+.no-select {
+  user-select: none;
 }
 </style>
 </head>
 <body>
-<div class="app-container">
-  <!-- Header -->
-  <header class="header">
-    <div class="logo">
-      <div class="logo-icon">
-        <i class="fas fa-brain"></i>
+<div class="app">
+  <!-- Sidebar: Contains models and settings -->
+  <div class="sidebar">
+    <div class="sidebar-header">
+      <h2>🤖 AI Pipeline Studio</h2>
+      <div class="header-buttons">
+        <button class="clear-btn" onclick="clearWorkspace()">Clear Workspace</button>
+        <button class="add-btn" onclick="openModal()">+ Add Model</button>
       </div>
-      <span class="logo-text">AI Pipeline</span>
     </div>
-    
-    <div class="header-actions">
-      <button class="btn btn-sm" onclick="toggleSidebar()">
-        <i class="fas fa-layer-group"></i>
-        <span>Models</span>
-      </button>
-      <button class="btn btn-success btn-sm" onclick="runAllModels()">
-        <i class="fas fa-play"></i>
-        <span>Run All</span>
-      </button>
-    </div>
-  </header>
-
-  <!-- Main Content -->
-  <div class="main-content">
-    <!-- Sidebar -->
-    <div class="sidebar" id="sidebar">
-      <div class="sidebar-section">
-        <div class="section-title">
-          <span>AI Models</span>
-          <button class="node-btn" onclick="openModelModal()">
-            <i class="fas fa-plus"></i>
-          </button>
-        </div>
-        <div id="model-list">
-          <!-- Models will be loaded here -->
-        </div>
-      </div>
+    <div class="sidebar-content">
+      <!-- Models list -->
+      <div class="model-list" id="modelList"></div>
       
-      <div class="sidebar-section">
-        <div class="section-title">Workspace</div>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <button class="nav-btn" onclick="clearWorkspace()">
-            <i class="fas fa-trash"></i> Clear
-          </button>
-          <button class="nav-btn" onclick="saveWorkspace()">
-            <i class="fas fa-save"></i> Save
-          </button>
-          <button class="nav-btn" onclick="loadWorkspace()">
-            <i class="fas fa-folder-open"></i> Load
-          </button>
+      <!-- Settings -->
+      <div class="settings">
+        <h3>Settings</h3>
+        <div class="setting-item">
+          <label>API Endpoint</label>
+          <select id="apiEndpoint">
+            <option value="https://ai-openrouter-proxy.abolfazl-kbahrami-ec0.workers.dev">OpenRouter Proxy</option>
+            <option value="https://openrouter.ai/api/v1/chat/completions">OpenRouter Direct</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <label>Temperature: <span id="tempValue">0.7</span></label>
+          <input type="range" id="temperature" min="0" max="1" step="0.1" value="0.7">
+        </div>
+        <div class="setting-item">
+          <label>Max Tokens</label>
+          <input type="number" id="maxTokens" value="1000" min="100" max="4000">
         </div>
       </div>
     </div>
-
-    <!-- Workspace -->
-    <div class="workspace" id="workspace">
-      <!-- AI Nodes will be placed here -->
-    </div>
   </div>
 
-  <!-- Response Panel -->
-  <div class="response-panel" id="response-panel">
-    <div class="response-header">
-      <span>Responses</span>
-      <button class="node-btn" onclick="clearResponses()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="response-content" id="response-content">
-      <!-- Responses will appear here -->
-    </div>
-  </div>
+  <!-- Workspace: Where models are placed and connected -->
+  <div class="workspace" id="workspace"></div>
 
-  <!-- Bottom Navigation -->
-  <div class="bottom-nav">
-    <button class="nav-btn active" onclick="showTab('workspace')">
-      <i class="fas fa-project-diagram"></i> Workspace
-    </button>
-    <button class="nav-btn" onclick="showTab('connections')">
-      <i class="fas fa-link"></i> Connections
-    </button>
-    <button class="nav-btn" onclick="showTab('settings')">
-      <i class="fas fa-cog"></i> Settings
-    </button>
-    <button class="nav-btn" onclick="showTab('batch')">
-      <i class="fas fa-bolt"></i> Batch Run
-    </button>
+  <!-- Chat Panel: Shows conversation history -->
+  <div class="chat-panel">
+    <div class="chat-header">
+      <h3>💬 Conversation</h3>
+      <button class="node-btn" onclick="clearChat()" title="Clear Chat">🗑️</button>
+    </div>
+    <div class="chat-content" id="chatContent">
+      <!-- Welcome message -->
+      <div class="message message-ai">
+        <div class="message-header">
+          <div class="message-avatar" style="background: #3b82f6;">🤖</div>
+          <div class="message-name">AI Assistant</div>
+          <div class="message-time">Now</div>
+        </div>
+        <div class="message-bubble">
+          Welcome to AI Pipeline Studio! 🚀
+          
+          Here's how to get started:
+          1. Add models using the "+ Add Model" button
+          2. Drag models from the sidebar to workspace
+          3. Connect models by dragging from output to input
+          4. Enter your prompt and click Run
+          
+          Models in a chain will pass responses automatically!
+        </div>
+      </div>
+    </div>
+    <div class="input-area">
+      <div class="input-wrapper">
+        <textarea id="promptInput" placeholder="Enter your prompt... (Press Shift+Enter for new line, Enter to send)"></textarea>
+        <button onclick="runPipeline()" id="runBtn">Run</button>
+      </div>
+    </div>
+    <div class="status-bar">
+      <div class="status-count">
+        <span id="modelCount">0 models</span>
+        <span id="connectionCount">0 connections</span>
+      </div>
+      <span id="messageCount">1 message</span>
+    </div>
   </div>
 </div>
 
-<!-- Model Creation Modal -->
-<div class="modal-overlay" id="model-modal">
-  <div class="modal">
+<!-- Modal for adding/editing models -->
+<div class="modal" id="modelModal">
+  <div class="modal-content">
     <div class="modal-header">
-      <h3>Create AI Model</h3>
-      <button class="node-btn" onclick="closeModelModal()">
-        <i class="fas fa-times"></i>
-      </button>
+      <h3 id="modalTitle">Add New AI Model</h3>
     </div>
-    
     <div class="modal-body">
       <div class="form-group">
         <label class="form-label">Model Name</label>
-        <input type="text" class="form-input" id="model-name" placeholder="e.g., Creative Writer">
+        <input type="text" class="form-input" id="modalName" placeholder="e.g., Creative Writer">
       </div>
       
       <div class="form-group">
         <label class="form-label">Icon & Color</label>
-        <div class="color-grid">
-          <div class="color-option selected" style="background: #6366f1;" data-color="#6366f1">
-            <i class="fas fa-robot"></i>
-          </div>
-          <div class="color-option" style="background: #10b981;" data-color="#10b981">
-            <i class="fas fa-lightbulb"></i>
-          </div>
-          <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6">
-            <i class="fas fa-code"></i>
-          </div>
-          <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b">
-            <i class="fas fa-chart-bar"></i>
-          </div>
-          <div class="color-option" style="background: #ec4899;" data-color="#ec4899">
-            <i class="fas fa-comment-medical"></i>
-          </div>
+        <div class="color-options">
+          <div class="color-option selected" style="background: #3b82f6;" data-color="#3b82f6" data-icon="🎨">🎨</div>
+          <div class="color-option" style="background: #10b981;" data-color="#10b981" data-icon="🧠">🧠</div>
+          <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6" data-icon="📝">📝</div>
+          <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b" data-icon="🔍">🔍</div>
+          <div class="color-option" style="background: #ec4899;" data-color="#ec4899" data-icon="🤖">🤖</div>
         </div>
       </div>
       
       <div class="form-group">
         <label class="form-label">AI Model</label>
-        <select class="form-select" id="model-type">
-          <option value="gpt-4">GPT-4</option>
-          <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
-          <option value="claude-3">Claude 3</option>
-          <option value="gemini-pro">Gemini Pro</option>
-          <option value="llama-3">Llama 3</option>
-          <option value="mistral">Mistral</option>
+        <select class="form-select" id="modalModel">
+          <option value="openai/gpt-oss-20b:free">GPT OSS 20B (Free)</option>
+          <option value="google/gemma-3-27b-it:free">Gemma 3 27B (Free)</option>
+          <option value="mistralai/devstral-2512:free">Devstral 25B (Free)</option>
+          <option value="tngtech/deepseek-r1t2-chimera:free">DeepSeek R1 Chimera (Free)</option>
+          <option value="nvidia/nemotron-nano-12b-v2-vl:free">Nemotron Nano 12B (Free)</option>
+          <option value="qwen/qwen3-coder:free">Qwen Coder (Free)</option>
         </select>
       </div>
       
       <div class="form-group">
         <label class="form-label">System Prompt</label>
-        <textarea class="form-textarea" id="model-prompt" placeholder="Describe how this model should behave..."></textarea>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Temperature</label>
-        <input type="range" class="form-input" id="model-temp" min="0" max="1" step="0.1" value="0.7">
-        <span id="temp-value-display">0.7</span>
+        <textarea class="form-textarea" id="modalPrompt" placeholder="Describe how this model should behave..."></textarea>
       </div>
     </div>
-    
     <div class="modal-footer">
-      <button class="btn" onclick="closeModelModal()">Cancel</button>
-      <button class="btn btn-success" onclick="saveModel()">Create Model</button>
-    </div>
-  </div>
-</div>
-
-<!-- Batch Run Modal -->
-<div class="modal-overlay" id="batch-modal">
-  <div class="modal">
-    <div class="modal-header">
-      <h3>Batch Run Configuration</h3>
-      <button class="node-btn" onclick="closeBatchModal()">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    
-    <div class="modal-body">
-      <div class="form-group">
-        <label class="form-label">Input Prompt</label>
-        <textarea class="form-textarea" id="batch-input" placeholder="Enter prompt to send to all models..."></textarea>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Run Mode</label>
-        <select class="form-select" id="batch-mode">
-          <option value="parallel">Run All Models in Parallel</option>
-          <option value="sequential">Run Connected Models Sequentially</option>
-          <option value="group">Run Groups Separately</option>
-        </select>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Selected Models</label>
-        <div id="model-selection">
-          <!-- Model checkboxes will be added here -->
-        </div>
-      </div>
-    </div>
-    
-    <div class="modal-footer">
-      <button class="btn" onclick="closeBatchModal()">Cancel</button>
-      <button class="btn btn-success" onclick="executeBatchRun()">
-        <i class="fas fa-play"></i> Run Batch
-      </button>
+      <button class="modal-btn cancel" onclick="closeModal()">Cancel</button>
+      <button class="modal-btn save" onclick="saveModel()" id="modalSaveBtn">Save Model</button>
     </div>
   </div>
 </div>
 
 <script>
-// State Management
+// ===== CONFIGURATION =====
+const API_URL = "https://ai-openrouter-proxy.abolfazl-kbahrami-ec0.workers.dev";
+
+// ===== STATE MANAGEMENT =====
 const state = {
   models: [
     {
-      id: 'model1',
+      id: 'creative',
       name: 'Creative Writer',
-      icon: 'fas fa-pen-nib',
-      color: '#6366f1',
-      type: 'gpt-4',
-      prompt: 'You are a creative writer specializing in storytelling, metaphors, and engaging narratives.',
-      temperature: 0.7
+      icon: '🎨',
+      color: '#3b82f6',
+      type: 'openai/gpt-oss-20b:free',
+      prompt: 'You are a creative writer. Generate innovative ideas, creative solutions, and think outside the box. Be imaginative and original in your responses.'
     },
     {
-      id: 'model2',
+      id: 'analyst',
       name: 'Technical Analyst',
-      icon: 'fas fa-chart-line',
+      icon: '🧠',
       color: '#10b981',
-      type: 'claude-3',
-      prompt: 'You are a technical analyst who breaks down complex topics into logical, structured explanations.',
-      temperature: 0.3
+      type: 'tngtech/deepseek-r1t2-chimera:free',
+      prompt: 'You are a logical thinker. Analyze problems step by step, provide structured reasoning, and give clear, rational explanations. Avoid emotional language.'
     },
     {
-      id: 'model3',
-      name: 'Code Assistant',
-      icon: 'fas fa-code',
+      id: 'summarizer',
+      name: 'Text Summarizer',
+      icon: '📝',
       color: '#8b5cf6',
-      type: 'gpt-3.5-turbo',
-      prompt: 'You are an expert programming assistant specializing in clean, efficient code across multiple languages.',
-      temperature: 0.5
+      type: 'mistralai/devstral-2512:free',
+      prompt: 'You are a summarizer. Take complex information and distill it into clear, concise summaries. Focus on key points and main ideas. Keep it brief but comprehensive.'
     }
   ],
+  
   nodes: [],
   connections: [],
-  selectedNode: null,
-  isConnecting: false,
-  connectionStart: null,
-  responses: []
+  messages: [],
+  connecting: null,
+  editingModelId: null
 };
 
-// DOM Elements
+// ===== DOM ELEMENTS =====
 const workspace = document.getElementById('workspace');
-const modelList = document.getElementById('model-list');
-const responseContent = document.getElementById('response-content');
-const modelModal = document.getElementById('model-modal');
-const batchModal = document.getElementById('batch-modal');
+const modelList = document.getElementById('modelList');
+const chatContent = document.getElementById('chatContent');
+const promptInput = document.getElementById('promptInput');
+const runBtn = document.getElementById('runBtn');
+const temperatureSlider = document.getElementById('temperature');
+const tempValue = document.getElementById('tempValue');
+const modelModal = document.getElementById('modelModal');
+const modalTitle = document.getElementById('modalTitle');
+const modalName = document.getElementById('modalName');
+const modalModel = document.getElementById('modalModel');
+const modalPrompt = document.getElementById('modalPrompt');
+const modalSaveBtn = document.getElementById('modalSaveBtn');
 
-// Initialize
-init();
-
+// ===== INITIALIZATION =====
 function init() {
   renderModelList();
   setupEventListeners();
-  loadDefaultNodes();
+  updateCounters();
+  
+  temperatureSlider.addEventListener('input', (e) => {
+    tempValue.textContent = e.target.value;
+  });
 }
 
+// ===== MODEL LIST RENDERING =====
 function renderModelList() {
   modelList.innerHTML = '';
+  
   state.models.forEach(model => {
     const div = document.createElement('div');
-    div.className = 'personality-item';
+    div.className = 'model-item';
     div.draggable = true;
     div.innerHTML = `
-      <div class="personality-header">
-        <div class="personality-icon" style="background: ${model.color}">
-          <i class="${model.icon}"></i>
+      <div class="model-header">
+        <div class="model-icon" style="background: ${model.color}">
+          ${model.icon}
         </div>
-        <div>
-          <div class="personality-name">${model.name}</div>
-          <div class="personality-model">${model.type}</div>
-        </div>
+        <div class="model-name">${model.name}</div>
+        <div class="model-edit" onclick="editModel('${model.id}')" title="Edit">✏️</div>
       </div>
+      <div class="model-type">${model.type.split('/')[1] || model.type}</div>
+      <div class="model-preview">${model.prompt.substring(0, 80)}...</div>
     `;
     
     div.addEventListener('dragstart', (e) => {
       e.dataTransfer.setData('modelId', model.id);
     });
     
-    div.addEventListener('click', () => {
-      addNodeToWorkspace(model);
+    div.addEventListener('click', (e) => {
+      if (!e.target.closest('.model-edit')) {
+        addNode(model);
+      }
     });
     
     modelList.appendChild(div);
   });
 }
 
-function setupEventListeners() {
-  // Workspace drop zone
-  workspace.addEventListener('dragover', (e) => {
-    e.preventDefault();
-  });
+// ===== MODAL FUNCTIONS =====
+function openModal(modelId = null) {
+  state.editingModelId = modelId;
   
-  workspace.addEventListener('drop', (e) => {
-    e.preventDefault();
-    const modelId = e.dataTransfer.getData('modelId');
+  if (modelId) {
+    modalTitle.textContent = 'Edit AI Model';
+    modalSaveBtn.textContent = 'Update Model';
+    
     const model = state.models.find(m => m.id === modelId);
     if (model) {
-      const rect = workspace.getBoundingClientRect();
-      const x = e.clientX - rect.left - 130; // Center node
-      const y = e.clientY - rect.top - 80;
-      addNodeToWorkspace(model, x, y);
+      modalName.value = model.name;
+      modalModel.value = model.type;
+      modalPrompt.value = model.prompt;
+      
+      document.querySelectorAll('.color-option').forEach(option => {
+        option.classList.remove('selected');
+        if (option.dataset.color === model.color) {
+          option.classList.add('selected');
+        }
+      });
     }
-  });
+  } else {
+    modalTitle.textContent = 'Add New AI Model';
+    modalSaveBtn.textContent = 'Save Model';
+    
+    modalName.value = '';
+    modalPrompt.value = '';
+    
+    document.querySelectorAll('.color-option').forEach(option => {
+      option.classList.remove('selected');
+    });
+    document.querySelector('.color-option').classList.add('selected');
+  }
   
-  // Touch events for mobile
-  workspace.addEventListener('touchstart', handleTouchStart, { passive: false });
-  workspace.addEventListener('touchmove', handleTouchMove, { passive: false });
-  workspace.addEventListener('touchend', handleTouchEnd, { passive: false });
-  
-  // Temperature slider
-  document.getElementById('model-temp').addEventListener('input', (e) => {
-    document.getElementById('temp-value-display').textContent = e.target.value;
-  });
+  modelModal.classList.add('active');
 }
 
-function addNodeToWorkspace(model, x = 100, y = 100) {
-  const nodeId = 'node_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+function closeModal() {
+  modelModal.classList.remove('active');
+  state.editingModelId = null;
+}
+
+function saveModel() {
+  const name = modalName.value.trim();
+  const type = modalModel.value;
+  const prompt = modalPrompt.value.trim();
+  const selectedColor = document.querySelector('.color-option.selected');
+  const color = selectedColor.dataset.color;
+  const icon = selectedColor.dataset.icon;
+  
+  if (!name || !prompt) {
+    alert('Please fill in all required fields');
+    return;
+  }
+  
+  if (state.editingModelId) {
+    const index = state.models.findIndex(m => m.id === state.editingModelId);
+    if (index !== -1) {
+      state.models[index] = {
+        ...state.models[index],
+        name,
+        icon,
+        color,
+        type,
+        prompt
+      };
+    }
+  } else {
+    const newModel = {
+      id: 'model_' + Date.now(),
+      name,
+      icon,
+      color,
+      type,
+      prompt
+    };
+    state.models.push(newModel);
+  }
+  
+  renderModelList();
+  closeModal();
+  updateCounters();
+}
+
+function editModel(modelId) {
+  openModal(modelId);
+}
+
+// ===== WORKSPACE NODES =====
+function addNode(model, x = 100, y = 100) {
+  const nodeId = 'node_' + Date.now();
   
   const node = {
     id: nodeId,
     modelId: model.id,
-    x: Math.max(0, Math.min(x, workspace.scrollWidth - 260)),
-    y: Math.max(0, Math.min(y, workspace.scrollHeight - 200)),
-    connections: {
-      inputs: [],
-      outputs: []
-    },
-    status: 'idle'
+    x: x,
+    y: y,
+    width: 260,
+    height: 200,
+    inputs: [],
+    outputs: [],
+    lastResponse: null
   };
   
   state.nodes.push(node);
   renderNode(node, model);
-  saveToLocalStorage();
+  updateCounters();
 }
 
 function renderNode(node, model) {
   const nodeEl = document.createElement('div');
-  nodeEl.className = 'ai-node';
+  nodeEl.className = 'node';
   nodeEl.id = node.id;
   nodeEl.style.left = node.x + 'px';
   nodeEl.style.top = node.y + 'px';
-  nodeEl.dataset.modelId = model.id;
+  nodeEl.style.width = node.width + 'px';
+  nodeEl.style.height = node.height + 'px';
   
   nodeEl.innerHTML = `
     <div class="node-header">
       <div class="node-title">
         <div class="node-icon" style="background: ${model.color}">
-          <i class="${model.icon}"></i>
+          ${model.icon}
         </div>
         <div class="node-text">
           <div class="node-name">${model.name}</div>
-          <div class="node-model">${model.type}</div>
+          <div class="node-model">${model.type.split('/')[1] || model.type}</div>
         </div>
       </div>
       <div class="node-actions">
-        <button class="node-btn" onclick="runSingleNode('${node.id}')" title="Run">
-          <i class="fas fa-play"></i>
-        </button>
-        <button class="node-btn" onclick="deleteNode('${node.id}')" title="Delete">
-          <i class="fas fa-trash"></i>
-        </button>
+        <button class="node-btn" onclick="runNode('${node.id}')">▶</button>
+        <button class="node-btn" onclick="deleteNode('${node.id}')">✕</button>
       </div>
     </div>
     <div class="node-body">
@@ -1047,212 +1261,189 @@ function renderNode(node, model) {
     </div>
     <div class="node-connectors">
       <div class="connector connector-input" 
-           onmousedown="startConnection('${node.id}', 'input')"
-           ontouchstart="startConnection('${node.id}', 'input')">
-        <i class="fas fa-arrow-right"></i>
+           onmousedown="startConnection('${node.id}', 'input')">
+        <i>→</i>
         <div class="connector-label">Input</div>
       </div>
       <div class="connector connector-output"
-           onmousedown="startConnection('${node.id}', 'output')"
-           ontouchstart="startConnection('${node.id}', 'output')">
-        <i class="fas fa-arrow-right"></i>
+           onmousedown="startConnection('${node.id}', 'output')">
+        <i>→</i>
         <div class="connector-label">Output</div>
       </div>
     </div>
+    <div class="resize-handle"></div>
   `;
   
   workspace.appendChild(nodeEl);
-  makeNodeDraggable(nodeEl, node);
-  updateConnections();
+  makeDraggable(nodeEl, node);
+  makeResizable(nodeEl, node);
 }
 
-function makeNodeDraggable(element, node) {
+function makeDraggable(element, node) {
   let isDragging = false;
   let startX, startY, initialX, initialY;
   
-  const startDrag = (clientX, clientY) => {
+  const header = element.querySelector('.node-header');
+  
+  header.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.node-btn')) return;
+    
     isDragging = true;
+    element.classList.add('dragging');
     const rect = element.getBoundingClientRect();
-    startX = clientX - rect.left;
-    startY = clientY - rect.top;
+    startX = e.clientX - rect.left;
+    startY = e.clientY - rect.top;
     initialX = node.x;
     initialY = node.y;
-    element.style.zIndex = '100';
+    element.style.zIndex = '1000';
+    
     document.addEventListener('mousemove', onDrag);
     document.addEventListener('mouseup', stopDrag);
-  };
+  });
   
-  const onDrag = (e) => {
+  function onDrag(e) {
     if (!isDragging) return;
-    e.preventDefault();
     
     const rect = workspace.getBoundingClientRect();
-    const x = e.clientX - rect.left - startX;
-    const y = e.clientY - rect.top - startY;
-    
-    // Constrain to workspace bounds
-    const maxX = workspace.scrollWidth - element.offsetWidth;
-    const maxY = workspace.scrollHeight - element.offsetHeight;
-    
-    node.x = Math.max(0, Math.min(x, maxX));
-    node.y = Math.max(0, Math.min(y, maxY));
+    node.x = e.clientX - rect.left - startX;
+    node.y = e.clientY - rect.top - startY;
     
     element.style.left = node.x + 'px';
     element.style.top = node.y + 'px';
     
     updateConnections();
-  };
+  }
   
-  const stopDrag = () => {
+  function stopDrag() {
     isDragging = false;
+    element.classList.remove('dragging');
     element.style.zIndex = '10';
     document.removeEventListener('mousemove', onDrag);
     document.removeEventListener('mouseup', stopDrag);
-    saveToLocalStorage();
-  };
-  
-  // Mouse events
-  element.addEventListener('mousedown', (e) => {
-    if (e.target.closest('.connector') || e.target.closest('.node-btn')) return;
-    startDrag(e.clientX, e.clientY);
-  });
-  
-  // Touch events
-  element.addEventListener('touchstart', (e) => {
-    if (e.target.closest('.connector') || e.target.closest('.node-btn')) return;
-    e.preventDefault();
-    const touch = e.touches[0];
-    startDrag(touch.clientX, touch.clientY);
-  }, { passive: false });
+  }
 }
 
+function makeResizable(element, node) {
+  const resizeHandle = element.querySelector('.resize-handle');
+  let isResizing = false;
+  let startX, startY, startWidth, startHeight;
+  
+  resizeHandle.addEventListener('mousedown', initResize);
+  
+  function initResize(e) {
+    isResizing = true;
+    e.preventDefault();
+    e.stopPropagation();
+    
+    startX = e.clientX;
+    startY = e.clientY;
+    startWidth = parseInt(getComputedStyle(element).width, 10);
+    startHeight = parseInt(getComputedStyle(element).height, 10);
+    
+    document.addEventListener('mousemove', doResize);
+    document.addEventListener('mouseup', stopResize);
+  }
+  
+  function doResize(e) {
+    if (!isResizing) return;
+    
+    const newWidth = Math.max(200, startWidth + (e.clientX - startX));
+    const newHeight = Math.max(150, startHeight + (e.clientY - startY));
+    
+    node.width = newWidth;
+    node.height = newHeight;
+    
+    element.style.width = newWidth + 'px';
+    element.style.height = newHeight + 'px';
+    
+    updateConnections();
+  }
+  
+  function stopResize() {
+    isResizing = false;
+    document.removeEventListener('mousemove', doResize);
+    document.removeEventListener('mouseup', stopResize);
+  }
+}
+
+// ===== CONNECTIONS =====
 function startConnection(nodeId, type) {
-  state.isConnecting = true;
-  state.connectionStart = { nodeId, type };
+  if (state.connecting) return;
+  
+  state.connecting = { nodeId, type };
   
   const nodeEl = document.getElementById(nodeId);
   const connector = nodeEl.querySelector(type === 'input' ? '.connector-input' : '.connector-output');
   const rect = connector.getBoundingClientRect();
   const workspaceRect = workspace.getBoundingClientRect();
   
-  state.connectionStart.x = rect.left + rect.width / 2 - workspaceRect.left;
-  state.connectionStart.y = rect.top + rect.height / 2 - workspaceRect.top;
+  state.connecting.x = rect.left + rect.width / 2 - workspaceRect.left;
+  state.connecting.y = rect.top + rect.height / 2 - workspaceRect.top;
   
-  createConnectionPreview();
-}
-
-function createConnectionPreview() {
   const preview = document.createElement('div');
-  preview.className = 'connection-line';
+  preview.className = 'connection';
   preview.id = 'connection-preview';
   workspace.appendChild(preview);
   
-  const updatePreview = (x, y) => {
-    const path = createCurvedPath(
-      state.connectionStart.x,
-      state.connectionStart.y,
-      x,
-      y
-    );
-    
-    preview.innerHTML = `
-      <svg width="100%" height="100%">
-        <path d="${path}" />
-      </svg>
-    `;
-  };
-  
-  const onMouseMove = (e) => {
+  function onMouseMove(e) {
     const rect = workspace.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    updatePreview(x, y);
-  };
+    
+    const path = createPath(state.connecting.x, state.connecting.y, x, y);
+    preview.innerHTML = `<svg><path d="${path}"></svg>`;
+  }
   
-  const onTouchMove = (e) => {
-    const rect = workspace.getBoundingClientRect();
-    const touch = e.touches[0];
-    const x = touch.clientX - rect.left;
-    const y = touch.clientY - rect.top;
-    updatePreview(x, y);
-  };
-  
-  const finishConnection = (targetNodeId, targetType) => {
-    if (state.connectionStart.type === 'output' && targetType === 'input') {
-      // Output to Input connection
-      state.connections.push({
-        from: state.connectionStart.nodeId,
-        to: targetNodeId
-      });
+  function onMouseUp(e) {
+    const target = e.target.closest('.connector');
+    if (target && state.connecting) {
+      const targetNodeId = target.closest('.node').id;
+      const targetType = target.classList.contains('connector-input') ? 'input' : 'output';
       
-      // Update node connections
-      const fromNode = state.nodes.find(n => n.id === state.connectionStart.nodeId);
-      const toNode = state.nodes.find(n => n.id === targetNodeId);
-      
-      if (fromNode && toNode) {
-        fromNode.connections.outputs.push(targetNodeId);
-        toNode.connections.inputs.push(state.connectionStart.nodeId);
+      if (state.connecting.type === 'output' && targetType === 'input') {
+        createConnection(state.connecting.nodeId, targetNodeId);
       }
-      
-      updateConnections();
-      saveToLocalStorage();
     }
     
-    cleanupConnection();
-  };
+    cleanup();
+  }
   
-  const cleanupConnection = () => {
-    state.isConnecting = false;
-    state.connectionStart = null;
+  function cleanup() {
+    state.connecting = null;
     preview.remove();
     document.removeEventListener('mousemove', onMouseMove);
     document.removeEventListener('mouseup', onMouseUp);
-    document.removeEventListener('touchmove', onTouchMove);
-    document.removeEventListener('touchend', onTouchEnd);
-  };
-  
-  const onMouseUp = (e) => {
-    const target = e.target.closest('.connector');
-    if (target) {
-      const targetNodeId = target.closest('.ai-node').id;
-      const targetType = target.classList.contains('connector-input') ? 'input' : 'output';
-      finishConnection(targetNodeId, targetType);
-    } else {
-      cleanupConnection();
-    }
-  };
-  
-  const onTouchEnd = (e) => {
-    const touch = e.changedTouches[0];
-    const target = document.elementFromPoint(touch.clientX, touch.clientY);
-    const connector = target?.closest('.connector');
-    
-    if (connector) {
-      const targetNodeId = connector.closest('.ai-node').id;
-      const targetType = connector.classList.contains('connector-input') ? 'input' : 'output';
-      finishConnection(targetNodeId, targetType);
-    } else {
-      cleanupConnection();
-    }
-  };
+  }
   
   document.addEventListener('mousemove', onMouseMove);
   document.addEventListener('mouseup', onMouseUp);
-  document.addEventListener('touchmove', onTouchMove, { passive: false });
-  document.addEventListener('touchend', onTouchEnd, { passive: false });
 }
 
-function createCurvedPath(x1, y1, x2, y2) {
-  const midX = (x1 + x2) / 2;
-  const curve = 50;
-  return `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
+function createConnection(fromNodeId, toNodeId) {
+  const exists = state.connections.some(c => c.from === fromNodeId && c.to === toNodeId);
+  if (exists) return;
+  
+  state.connections.push({
+    id: 'conn_' + Date.now(),
+    from: fromNodeId,
+    to: toNodeId
+  });
+  
+  const fromNode = state.nodes.find(n => n.id === fromNodeId);
+  const toNode = state.nodes.find(n => n.id === toNodeId);
+  
+  if (fromNode && toNode) {
+    fromNode.outputs.push(toNodeId);
+    toNode.inputs.push(fromNodeId);
+  }
+  
+  updateConnections();
+  updateCounters();
 }
 
 function updateConnections() {
-  // Remove existing connections
-  document.querySelectorAll('.connection-line:not(#connection-preview)').forEach(el => el.remove());
+  document.querySelectorAll('.connection:not(#connection-preview)').forEach(el => el.remove());
   
-  // Render all connections
   state.connections.forEach(conn => {
     const fromNode = document.getElementById(conn.from);
     const toNode = document.getElementById(conn.to);
@@ -1273,535 +1464,301 @@ function updateConnections() {
     const endX = toRect.left + toRect.width / 2 - workspaceRect.left;
     const endY = toRect.top + toRect.height / 2 - workspaceRect.top;
     
-    const path = createCurvedPath(startX, startY, endX, endY);
+    const path = createPath(startX, startY, endX, endY);
     
     const line = document.createElement('div');
-    line.className = 'connection-line';
-    line.innerHTML = `
-      <svg width="100%" height="100%">
-        <path d="${path}" />
-      </svg>
-    `;
-    
+    line.className = 'connection';
+    line.innerHTML = `<svg><path d="${path}"></svg>`;
     workspace.appendChild(line);
   });
 }
 
-async function runSingleNode(nodeId) {
+function createPath(x1, y1, x2, y2) {
+  const midX = (x1 + x2) / 2;
+  return `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
+}
+
+// ===== AI API CALL =====
+async function callAI(model, input) {
+  try {
+    const endpoint = document.getElementById('apiEndpoint').value || API_URL;
+    const temperature = parseFloat(temperatureSlider.value);
+    const maxTokens = parseInt(document.getElementById('maxTokens').value) || 1000;
+    
+    const response = await fetch(endpoint, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: model.type,
+        messages: [
+          { role: 'system', content: model.prompt },
+          { role: 'user', content: input }
+        ],
+        max_tokens: maxTokens,
+        temperature: temperature
+      })
+    });
+    
+    const data = await response.json();
+    
+    if (data.choices?.[0]?.message?.content) {
+      return data.choices[0].message.content;
+    }
+    
+    return `Error: ${data.error?.message || 'No response'}`;
+    
+  } catch (error) {
+    return `Error: ${error.message}`;
+  }
+}
+
+// ===== PIPELINE EXECUTION =====
+async function runPipeline() {
+  const prompt = promptInput.value.trim();
+  if (!prompt) return;
+  
+  clearChat();
+  addMessage('user', prompt, 'You');
+  
+  runBtn.disabled = true;
+  runBtn.innerHTML = '<span class="loader"></span> Running...';
+  
+  const startNodes = state.nodes.filter(node => node.inputs.length === 0);
+  
+  if (startNodes.length === 0) {
+    addMessage('ai', 'No starting nodes found. Add models without input connections.', 'System');
+    runBtn.disabled = false;
+    runBtn.innerHTML = 'Run';
+    return;
+  }
+  
+  for (const startNode of startNodes) {
+    await executeChain(startNode, prompt);
+  }
+  
+  runBtn.disabled = false;
+  runBtn.innerHTML = 'Run';
+}
+
+async function executeChain(startNode, input) {
+  const visited = new Set();
+  const queue = [{ node: startNode, input: input }];
+  
+  while (queue.length > 0) {
+    const { node, input: currentInput } = queue.shift();
+    
+    if (visited.has(node.id)) continue;
+    visited.add(node.id);
+    
+    const model = state.models.find(m => m.id === node.modelId);
+    if (!model) continue;
+    
+    const nodeEl = document.getElementById(node.id);
+    if (nodeEl) {
+      nodeEl.classList.add('executing');
+    }
+    
+    let finalInput = currentInput;
+    if (node.inputs.length > 0) {
+      const inputs = [];
+      for (const inputNodeId of node.inputs) {
+        const inputNode = state.nodes.find(n => n.id === inputNodeId);
+        if (inputNode?.lastResponse) {
+          inputs.push(inputNode.lastResponse);
+        }
+      }
+      if (inputs.length > 0) {
+        finalInput = inputs.join('\n\n---\n\n');
+      }
+    }
+    
+    const response = await callAI(model, finalInput);
+    
+    node.lastResponse = response;
+    
+    if (nodeEl) {
+      nodeEl.classList.remove('executing');
+    }
+    
+    addMessage('ai', response, model.name, model.color);
+    
+    node.outputs.forEach(outputNodeId => {
+      const outputNode = state.nodes.find(n => n.id === outputNodeId);
+      if (outputNode && !visited.has(outputNodeId)) {
+        queue.push({ node: outputNode, input: response });
+      }
+    });
+  }
+}
+
+async function runNode(nodeId) {
   const node = state.nodes.find(n => n.id === nodeId);
   const model = state.models.find(m => m.id === node.modelId);
   if (!node || !model) return;
   
-  // Get input from connected nodes
-  let inputText = '';
-  if (node.connections.inputs.length > 0) {
-    const inputNode = state.nodes.find(n => n.id === node.connections.inputs[0]);
-    if (inputNode && state.responses.some(r => r.nodeId === inputNode.id)) {
-      const lastResponse = state.responses.filter(r => r.nodeId === inputNode.id).pop();
-      inputText = lastResponse.content;
-    }
+  let input = promptInput.value.trim();
+  if (!input) {
+    input = prompt(`Enter input for ${model.name}:`) || '';
   }
   
-  if (!inputText) {
-    inputText = prompt(`Enter input for ${model.name}:`) || '';
-  }
-  
-  if (!inputText.trim()) {
-    alert('Please provide input text');
-    return;
-  }
-  
-  await callAI(node, model, inputText);
-}
-
-async function runAllModels() {
-  const input = prompt('Enter initial prompt for all models:');
   if (!input) return;
   
-  // Clear previous responses
-  state.responses = [];
-  responseContent.innerHTML = '<div class="loading"><span class="spinner"></span> Running pipeline...</div>';
-  
-  // Group 1: Nodes without inputs (starting points)
-  const startNodes = state.nodes.filter(node => node.connections.inputs.length === 0);
-  
-  // Group 2: Connected chains
-  const connectedChains = [];
-  const visited = new Set();
-  
-  for (const node of state.nodes) {
-    if (!visited.has(node.id) && node.connections.inputs.length > 0) {
-      const chain = [];
-      let current = node;
-      while (current && !visited.has(current.id)) {
-        visited.add(current.id);
-        chain.push(current);
-        // Move to next in chain
-        if (current.connections.outputs.length > 0) {
-          const nextId = current.connections.outputs[0];
-          current = state.nodes.find(n => n.id === nextId);
-        } else {
-          break;
-        }
-      }
-      if (chain.length > 0) {
-        connectedChains.push(chain);
-      }
-    }
-  }
-  
-  // Run start nodes in parallel
-  await Promise.all(startNodes.map(async (node) => {
-    const model = state.models.find(m => m.id === node.modelId);
-    if (model) {
-      await callAI(node, model, input);
-    }
-  }));
-  
-  // Run connected chains
-  for (const chain of connectedChains) {
-    let chainInput = input;
-    for (const node of chain) {
-      const model = state.models.find(m => m.id === node.modelId);
-      if (model) {
-        const response = await callAI(node, model, chainInput, true);
-        if (response) {
-          chainInput = response.content;
-        }
-      }
-    }
-  }
-}
-
-async function callAI(node, model, input, isChain = false) {
   const nodeEl = document.getElementById(node.id);
-  const runBtn = nodeEl.querySelector('.node-btn');
-  const originalHTML = runBtn.innerHTML;
+  nodeEl.classList.add('executing');
   
-  // Show loading
-  runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-  runBtn.disabled = true;
-  nodeEl.style.borderColor = '#f59e0b';
+  const response = await callAI(model, input);
   
-  try {
-    // Simulate API call (replace with actual API)
-    await new Promise(resolve => setTimeout(resolve, 1500));
-    
-    // Generate mock response based on model type
-    const responses = {
-      'gpt-4': `As ${model.name}, I would say: "${input}"\n\nI've analyzed this thoroughly and here's my comprehensive response. The key points are...`,
-      'claude-3': `From a technical perspective: ${input}\n\nLet me break this down systematically:\n1. First point\n2. Second point\n3. Conclusion`,
-      'gpt-3.5-turbo': `Here's a quick response: ${input.substring(0, 100)}...\n\nI can help you with this!`,
-      'creative': `✨ Once upon a time... ${input} ✨\n\nAnd so the story unfolds with creativity and imagination!`
-    };
-    
-    const content = responses[model.type] || `Response from ${model.name}: ${input}`;
-    
-    // Store response
-    const response = {
-      id: 'resp_' + Date.now(),
-      nodeId: node.id,
-      modelName: model.name,
-      modelType: model.type,
-      content: content,
-      timestamp: new Date().toISOString(),
-      input: input
-    };
-    
-    state.responses.push(response);
-    renderResponse(response);
-    
-    // Visual feedback
-    nodeEl.style.borderColor = '#10b981';
-    setTimeout(() => {
-      nodeEl.style.borderColor = model.color;
-    }, 2000);
-    
-    return response;
-    
-  } catch (error) {
-    console.error('Error:', error);
-    const errorResponse = {
-      id: 'err_' + Date.now(),
-      nodeId: node.id,
-      modelName: model.name,
-      modelType: model.type,
-      content: `Error: ${error.message}`,
-      timestamp: new Date().toISOString(),
-      input: input,
-      isError: true
-    };
-    
-    state.responses.push(errorResponse);
-    renderResponse(errorResponse);
-    
-    nodeEl.style.borderColor = '#ef4444';
-    setTimeout(() => {
-      nodeEl.style.borderColor = model.color;
-    }, 2000);
-    
-  } finally {
-    runBtn.innerHTML = originalHTML;
-    runBtn.disabled = false;
-  }
+  nodeEl.classList.remove('executing');
+  
+  addMessage('ai', response, model.name, model.color);
+  
+  node.lastResponse = response;
 }
 
-function renderResponse(response) {
-  const responseEl = document.createElement('div');
-  responseEl.className = 'response-item';
-  if (response.isError) {
-    responseEl.style.borderLeftColor = '#ef4444';
-  }
+// ===== CHAT SYSTEM =====
+function addMessage(type, content, name, color = '#3b82f6') {
+  const messageEl = document.createElement('div');
+  messageEl.className = `message message-${type}`;
   
-  responseEl.innerHTML = `
-    <div class="response-title">
-      <span class="response-name">${response.modelName}</span>
-      <span class="response-time">${new Date(response.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+  const timestamp = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  
+  messageEl.innerHTML = `
+    <div class="message-header">
+      <div class="message-avatar" style="background: ${type === 'user' ? '#6b7280' : color}">
+        ${type === 'user' ? '👤' : '🤖'}
+      </div>
+      <div class="message-name">${name}</div>
+      <div class="message-time">${timestamp}</div>
     </div>
-    <div class="response-text">${response.content.substring(0, 200)}${response.content.length > 200 ? '...' : ''}</div>
+    <div class="message-bubble">${escapeHtml(content)}</div>
   `;
   
-  responseEl.addEventListener('click', () => {
-    alert(response.content);
-  });
+  chatContent.appendChild(messageEl);
+  state.messages.push({ type, content, name, color, timestamp });
   
-  responseContent.prepend(responseEl);
+  messageEl.scrollIntoView({ behavior: 'smooth', block: 'end' });
   
-  // Auto-scroll to top
-  responseContent.scrollTop = 0;
+  updateCounters();
+}
+
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function clearChat() {
+  const welcomeMessage = chatContent.querySelector('.message-ai');
+  chatContent.innerHTML = '';
+  
+  if (welcomeMessage) {
+    chatContent.appendChild(welcomeMessage);
+    state.messages = [{
+      type: 'ai',
+      content: welcomeMessage.querySelector('.message-bubble').textContent,
+      name: 'AI Assistant',
+      color: '#3b82f6',
+      timestamp: 'Now'
+    }];
+  } else {
+    addMessage('ai', 'Welcome to AI Pipeline Studio! Drag models, connect them, and enter a prompt to get started.', 'AI Assistant', '#3b82f6');
+  }
+  
+  updateCounters();
+}
+
+// ===== UI HELPERS =====
+function updateCounters() {
+  document.getElementById('modelCount').textContent = `${state.nodes.length} models`;
+  document.getElementById('connectionCount').textContent = `${state.connections.length} connections`;
+  document.getElementById('messageCount').textContent = `${state.messages.length} messages`;
 }
 
 function deleteNode(nodeId) {
-  if (confirm('Delete this node?')) {
-    // Remove node
-    state.nodes = state.nodes.filter(n => n.id !== nodeId);
-    
-    // Remove connections
-    state.connections = state.connections.filter(c => 
-      c.from !== nodeId && c.to !== nodeId
-    );
-    
-    // Remove from other nodes' connections
-    state.nodes.forEach(node => {
-      node.connections.inputs = node.connections.inputs.filter(id => id !== nodeId);
-      node.connections.outputs = node.connections.outputs.filter(id => id !== nodeId);
-    });
-    
-    // Remove from DOM
-    document.getElementById(nodeId)?.remove();
-    
-    // Update connections
-    updateConnections();
-    saveToLocalStorage();
+  if (!confirm('Delete this node?')) return;
+  
+  state.nodes = state.nodes.filter(n => n.id !== nodeId);
+  state.connections = state.connections.filter(c => c.from !== nodeId && c.to !== nodeId);
+  
+  state.nodes.forEach(node => {
+    node.inputs = node.inputs.filter(id => id !== nodeId);
+    node.outputs = node.outputs.filter(id => id !== nodeId);
+  });
+  
+  const nodeEl = document.getElementById(nodeId);
+  if (nodeEl) {
+    nodeEl.style.opacity = '0';
+    nodeEl.style.transform = 'scale(0.8)';
+    setTimeout(() => nodeEl.remove(), 300);
   }
+  
+  updateConnections();
+  updateCounters();
 }
 
 function clearWorkspace() {
-  if (confirm('Clear entire workspace?')) {
-    state.nodes = [];
-    state.connections = [];
-    workspace.innerHTML = '';
-    saveToLocalStorage();
-  }
-}
-
-function clearResponses() {
-  state.responses = [];
-  responseContent.innerHTML = '';
-}
-
-// UI Functions
-function toggleSidebar() {
-  document.getElementById('sidebar').classList.toggle('active');
-}
-
-function openModelModal() {
-  modelModal.classList.add('active');
-}
-
-function closeModelModal() {
-  modelModal.classList.remove('active');
-}
-
-function openBatchModal() {
-  // Populate model selection
-  const modelSelection = document.getElementById('model-selection');
-  modelSelection.innerHTML = '';
+  if (!confirm('Clear entire workspace? This will remove all nodes and connections.')) return;
   
-  state.nodes.forEach(node => {
-    const model = state.models.find(m => m.id === node.modelId);
+  state.nodes = [];
+  state.connections = [];
+  
+  document.querySelectorAll('.node').forEach(node => {
+    node.style.opacity = '0';
+    node.style.transform = 'scale(0.8)';
+    setTimeout(() => node.remove(), 300);
+  });
+  
+  document.querySelectorAll('.connection').forEach(conn => {
+    conn.remove();
+  });
+  
+  updateCounters();
+}
+
+// ===== EVENT LISTENERS =====
+function setupEventListeners() {
+  workspace.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+  
+  workspace.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const modelId = e.dataTransfer.getData('modelId');
+    const model = state.models.find(m => m.id === modelId);
+    
     if (model) {
-      const div = document.createElement('div');
-      div.style.marginBottom = '8px';
-      div.innerHTML = `
-        <label style="display: flex; align-items: center; gap: 8px;">
-          <input type="checkbox" checked data-node-id="${node.id}">
-          <span>${model.name} (${model.type})</span>
-        </label>
-      `;
-      modelSelection.appendChild(div);
+      const rect = workspace.getBoundingClientRect();
+      const x = e.clientX - rect.left - 130;
+      const y = e.clientY - rect.top - 60;
+      addNode(model, x, y);
     }
   });
   
-  batchModal.classList.add('active');
-}
-
-function closeBatchModal() {
-  batchModal.classList.remove('active');
-}
-
-function saveModel() {
-  const name = document.getElementById('model-name').value;
-  const type = document.getElementById('model-type').value;
-  const prompt = document.getElementById('model-prompt').value;
-  const temp = document.getElementById('model-temp').value;
-  const color = document.querySelector('.color-option.selected').dataset.color;
-  const icon = document.querySelector('.color-option.selected i').className;
-  
-  if (!name || !prompt) {
-    alert('Please fill in required fields');
-    return;
-  }
-  
-  const newModel = {
-    id: 'model_' + Date.now(),
-    name: name,
-    icon: icon,
-    color: color,
-    type: type,
-    prompt: prompt,
-    temperature: parseFloat(temp)
-  };
-  
-  state.models.push(newModel);
-  renderModelList();
-  closeModelModal();
-  
-  // Reset form
-  document.getElementById('model-name').value = '';
-  document.getElementById('model-prompt').value = '';
-}
-
-function executeBatchRun() {
-  const input = document.getElementById('batch-input').value;
-  const mode = document.getElementById('batch-mode').value;
-  
-  if (!input) {
-    alert('Please enter input text');
-    return;
-  }
-  
-  closeBatchModal();
-  runBatch(input, mode);
-}
-
-async function runBatch(input, mode) {
-  // Clear previous responses
-  state.responses = [];
-  responseContent.innerHTML = '<div class="loading"><span class="spinner"></span> Running batch...</div>';
-  
-  if (mode === 'parallel') {
-    // Run all selected models in parallel
-    const selectedNodes = getSelectedNodes();
-    await Promise.all(selectedNodes.map(async (node) => {
-      const model = state.models.find(m => m.id === node.modelId);
-      if (model) {
-        await callAI(node, model, input);
-      }
-    }));
-    
-  } else if (mode === 'sequential') {
-    // Run connected models sequentially
-    const selectedNodes = getSelectedNodes();
-    let currentInput = input;
-    
-    for (const node of selectedNodes) {
-      const model = state.models.find(m => m.id === node.modelId);
-      if (model) {
-        const response = await callAI(node, model, currentInput, true);
-        if (response) {
-          currentInput = response.content;
-        }
-      }
+  promptInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      runPipeline();
     }
-    
-  } else if (mode === 'group') {
-    // Run disconnected groups separately
-    const selectedNodes = getSelectedNodes();
-    const groups = findDisconnectedGroups(selectedNodes);
-    
-    for (const group of groups) {
-      // Run each group
-      if (group.length === 1) {
-        // Single node
-        const node = group[0];
-        const model = state.models.find(m => m.id === node.modelId);
-        if (model) {
-          await callAI(node, model, input);
-        }
-      } else {
-        // Connected chain
-        let chainInput = input;
-        for (const node of group) {
-          const model = state.models.find(m => m.id === node.modelId);
-          if (model) {
-            const response = await callAI(node, model, chainInput, true);
-            if (response) {
-              chainInput = response.content;
-            }
-          }
-        }
-      }
-    }
-  }
-}
-
-function getSelectedNodes() {
-  const checkboxes = document.querySelectorAll('#model-selection input[type="checkbox"]:checked');
-  const selectedIds = Array.from(checkboxes).map(cb => cb.dataset.nodeId);
-  return state.nodes.filter(node => selectedIds.includes(node.id));
-}
-
-function findDisconnectedGroups(nodes) {
-  const groups = [];
-  const visited = new Set();
-  
-  for (const node of nodes) {
-    if (!visited.has(node.id)) {
-      const group = [];
-      const queue = [node];
-      
-      while (queue.length > 0) {
-        const current = queue.shift();
-        if (!visited.has(current.id)) {
-          visited.add(current.id);
-          group.push(current);
-          
-          // Add connected nodes
-          const connections = [
-            ...current.connections.inputs,
-            ...current.connections.outputs
-          ];
-          
-          for (const connId of connections) {
-            const connectedNode = nodes.find(n => n.id === connId);
-            if (connectedNode && !visited.has(connectedNode.id)) {
-              queue.push(connectedNode);
-            }
-          }
-        }
-      }
-      
-      if (group.length > 0) {
-        groups.push(group);
-      }
-    }
-  }
-  
-  return groups;
-}
-
-function showTab(tabName) {
-  // Update active button
-  document.querySelectorAll('.nav-btn').forEach(btn => {
-    btn.classList.remove('active');
   });
-  event.target.classList.add('active');
   
-  // Show corresponding content
-  // Implement tab switching logic here
-}
-
-function saveWorkspace() {
-  const workspaceData = {
-    nodes: state.nodes,
-    connections: state.connections,
-    timestamp: new Date().toISOString()
-  };
-  
-  localStorage.setItem('ai-pipeline-workspace', JSON.stringify(workspaceData));
-  alert('Workspace saved!');
-}
-
-function loadWorkspace() {
-  const saved = localStorage.getItem('ai-pipeline-workspace');
-  if (saved) {
-    const data = JSON.parse(saved);
-    state.nodes = data.nodes || [];
-    state.connections = data.connections || [];
-    
-    // Clear and re-render
-    workspace.innerHTML = '';
-    state.nodes.forEach(node => {
-      const model = state.models.find(m => m.id === node.modelId);
-      if (model) {
-        renderNode(node, model);
-      }
+  document.querySelectorAll('.color-option').forEach(option => {
+    option.addEventListener('click', function() {
+      document.querySelectorAll('.color-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      this.classList.add('selected');
     });
-    updateConnections();
-    alert('Workspace loaded!');
-  } else {
-    alert('No saved workspace found');
-  }
-}
-
-function saveToLocalStorage() {
-  const workspaceData = {
-    nodes: state.nodes,
-    connections: state.connections,
-    timestamp: new Date().toISOString()
-  };
+  });
   
-  localStorage.setItem('ai-pipeline-autosave', JSON.stringify(workspaceData));
+  modelModal.addEventListener('click', (e) => {
+    if (e.target === modelModal) {
+      closeModal();
+    }
+  });
 }
 
-function loadDefaultNodes() {
-  // Auto-load saved workspace
-  const saved = localStorage.getItem('ai-pipeline-autosave');
-  if (saved) {
-    const data = JSON.parse(saved);
-    state.nodes = data.nodes || [];
-    state.connections = data.connections || [];
-    
-    // Render saved nodes
-    state.nodes.forEach(node => {
-      const model = state.models.find(m => m.id === node.modelId);
-      if (model) {
-        renderNode(node, model);
-      }
-    });
-    updateConnections();
-  } else {
-    // Add some default nodes
-    setTimeout(() => {
-      if (state.models.length > 0) {
-        addNodeToWorkspace(state.models[0], 50, 50);
-        addNodeToWorkspace(state.models[1], 350, 50);
-        addNodeToWorkspace(state.models[2], 200, 250);
-      }
-    }, 500);
-  }
-}
-
-// Touch event handlers for mobile
-function handleTouchStart(e) {
-  if (e.target.closest('.ai-node') || e.target.closest('.connector')) return;
-  
-  // Prevent default to avoid scrolling when trying to connect
-  if (state.isConnecting) {
-    e.preventDefault();
-  }
-}
-
-function handleTouchMove(e) {
-  if (state.isConnecting) {
-    e.preventDefault();
-  }
-}
-
-function handleTouchEnd(e) {
-  // Touch handling is managed in individual handlers
-}
+// ===== INITIALIZE APP =====
+window.addEventListener('load', init);
 </script>
 </body>
 </html>
