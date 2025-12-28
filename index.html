@@ -2,593 +2,1806 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Multi-Model AI Personality Studio</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Pipeline Studio - Mobile Workspace</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-* { box-sizing: border-box; }
-body {
+:root {
+  --primary: #6366f1;
+  --primary-dark: #4f46e5;
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --bg-dark: #0f172a;
+  --bg-card: #1e293b;
+  --bg-surface: #334155;
+  --text-primary: #f1f5f9;
+  --text-secondary: #94a3b8;
+  --border: #475569;
+}
+
+* {
   margin: 0;
-  font-family: Inter, Segoe UI, sans-serif;
-  background: #0b1220;
-  color: #e5e7eb;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-tap-highlight-color: transparent;
 }
-.wrapper {
-  display: grid;
-  grid-template-columns: 420px 1fr;
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--bg-dark);
+  color: var(--text-primary);
   height: 100vh;
+  overflow: hidden;
+  touch-action: pan-x pan-y;
 }
-.sidebar {
-  background: #020617;
-  border-right: 1px solid #1e293b;
-  padding: 20px;
-  overflow-y: auto;
-}
-.sidebar-header {
+
+/* Mobile Layout */
+.app-container {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  flex-direction: column;
+  height: 100vh;
+  max-width: 100vw;
 }
-.add-btn {
-  background: #22c55e;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: opacity 0.2s;
-}
-.add-btn:hover { opacity: 0.9; }
-.person-row {
-  border: 1px solid #1e293b;
-  border-radius: 14px;
-  padding: 12px;
-  margin-top: 12px;
-  background: #020617;
-  transition: border-color 0.3s;
-}
-.person-row:hover { border-color: #374151; }
-.row-header {
+
+/* Header */
+.header {
+  background: var(--bg-card);
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--border);
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  cursor: pointer;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
-.row-left {
+
+.logo {
   display: flex;
   align-items: center;
   gap: 10px;
-}
-.actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-.edit {
-  color: white;
+  font-weight: 700;
   font-size: 18px;
-  cursor: pointer;
+}
+
+.logo-icon {
+  width: 32px;
+  height: 32px;
+  background: var(--primary);
+  border-radius: 8px;
   display: flex;
-  justify-content: center;
   align-items: center;
-  padding: 4px;
-  border-radius: 4px;
+  justify-content: center;
 }
-.edit:hover { background: rgba(255,255,255,0.1); }
-.expand {
-  transition: transform 0.3s;
-}
-.person-row.open .expand {
-  transform: rotate(90deg);
-}
-.row-body {
-  display: none;
-  margin-top: 10px;
-  font-size: 13px;
-  opacity: 0.75;
-  white-space: pre-wrap;
-  line-height: 1.5;
-}
-.person-row.open .row-body {
-  display: block;
-}
-.main {
-  padding: 30px;
-  overflow-y: auto;
-}
-.top {
+
+.header-actions {
   display: flex;
   gap: 8px;
-  margin-bottom: 20px;
+}
+
+.btn {
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: none;
+  background: var(--primary);
+  color: white;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
   align-items: center;
+  justify-content: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.btn:hover {
+  background: var(--primary-dark);
+  transform: translateY(-1px);
+}
+
+.btn-sm {
+  padding: 8px 12px;
+  font-size: 13px;
+}
+
+.btn-success {
+  background: var(--success);
+}
+
+.btn-warning {
+  background: var(--warning);
+}
+
+.btn-danger {
+  background: var(--danger);
+}
+
+/* Main Content Area */
+.main-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
   position: relative;
 }
-.top input {
-  flex: 1;
-  padding: 14px 18px;
-  border-radius: 12px;
-  border: 1px solid #374151;
-  font-size: 16px;
-  background: #020617;
-  color: white;
-  font-family: inherit;
+
+/* Sidebar (Hidden on mobile, shown via toggle) */
+.sidebar {
+  width: 280px;
+  background: var(--bg-card);
+  border-right: 1px solid var(--border);
+  overflow-y: auto;
+  display: none;
+  flex-direction: column;
+  gap: 16px;
+  padding: 16px;
+  position: absolute;
+  height: 100%;
+  z-index: 90;
+  left: 0;
+  top: 0;
 }
-.top input:focus {
-  outline: none;
-  border-color: #22c55e;
+
+.sidebar.active {
+  display: flex;
 }
-.top button {
-  padding: 14px 24px;
+
+.sidebar-section {
+  background: var(--bg-surface);
   border-radius: 12px;
-  border: none;
-  background: #22c55e;
-  color: white;
-  font-size: 16px;
+  padding: 16px;
+}
+
+.section-title {
+  font-size: 14px;
   font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Workspace Canvas */
+.workspace {
+  flex: 1;
+  position: relative;
+  overflow: auto;
+  background: 
+    linear-gradient(rgba(15, 23, 42, 0.9), rgba(15, 23, 42, 0.9)),
+    repeating-linear-gradient(
+      0deg,
+      transparent,
+      transparent 19px,
+      rgba(71, 85, 105, 0.1) 19px,
+      rgba(71, 85, 105, 0.1) 20px
+    ),
+    repeating-linear-gradient(
+      90deg,
+      transparent,
+      transparent 19px,
+      rgba(71, 85, 105, 0.1) 19px,
+      rgba(71, 85, 105, 0.1) 20px
+    );
+  background-size: 100% 100%, 20px 20px, 20px 20px;
+  min-height: calc(100vh - 140px);
+  padding: 20px;
+}
+
+/* AI Node Styles */
+.ai-node {
+  position: absolute;
+  width: 260px;
+  background: var(--bg-card);
+  border-radius: 14px;
+  border: 2px solid var(--border);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+  z-index: 10;
+  transition: all 0.3s ease;
+  touch-action: none;
+}
+
+.ai-node:hover {
+  border-color: var(--primary);
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+}
+
+.node-header {
+  padding: 14px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 14px 14px 0 0;
+}
+
+.node-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 0;
+}
+
+.node-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.node-text {
+  min-width: 0;
+}
+
+.node-name {
+  font-weight: 600;
+  font-size: 15px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.node-model {
+  font-size: 12px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.node-actions {
+  display: flex;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.node-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: var(--bg-surface);
+  border: none;
+  color: var(--text-secondary);
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
-  transition: opacity 0.2s;
+  font-size: 14px;
+  transition: all 0.2s;
 }
-.top button:hover { opacity: 0.9; }
-.top button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.gear {
-  font-size: 20px;
-  cursor: pointer;
-  background: none;
-  border: none;
+
+.node-btn:hover {
+  background: var(--primary);
   color: white;
-  margin-left: 6px;
+}
+
+.node-body {
+  padding: 14px;
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+  max-height: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+}
+
+.node-connectors {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-top: 1px solid var(--border);
+}
+
+.connector {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
   display: flex;
   align-items: center;
-  padding: 8px;
-  border-radius: 8px;
+  justify-content: center;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s;
 }
-.gear:hover { background: rgba(255,255,255,0.1); }
-#settings { background-color: transparent; padding: 0; }
-.popup {
+
+.connector:hover {
+  transform: scale(1.1);
+}
+
+.connector-input {
+  background: var(--success);
+}
+
+.connector-output {
+  background: var(--primary);
+}
+
+.connector i {
+  color: white;
+  font-size: 14px;
+}
+
+.connector-label {
   position: absolute;
-  top: 50px;
-  right: 0;
-  background: #020617;
-  border: 1px solid #1e293b;
-  border-radius: 12px;
-  padding: 16px;
-  display: none;
-  z-index: 100;
-  min-width: 180px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  top: -20px;
+  font-size: 10px;
+  background: rgba(0, 0, 0, 0.8);
+  padding: 2px 6px;
+  border-radius: 4px;
+  white-space: nowrap;
+  opacity: 0;
+  transition: opacity 0.2s;
 }
-.popup label {
+
+.connector:hover .connector-label {
+  opacity: 1;
+}
+
+/* Connection Lines */
+.connection-line {
+  position: absolute;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.connection-line svg {
+  overflow: visible;
+}
+
+.connection-line path {
+  stroke: var(--primary);
+  stroke-width: 3;
+  fill: none;
+  stroke-dasharray: 5;
+  animation: dash 20s linear infinite;
+}
+
+@keyframes dash {
+  to {
+    stroke-dashoffset: 1000;
+  }
+}
+
+/* Response Panel */
+.response-panel {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  max-height: 40vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.response-header {
+  padding: 12px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid var(--border);
+}
+
+.response-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.response-item {
+  background: var(--bg-surface);
+  border-radius: 10px;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-left: 4px solid var(--primary);
+}
+
+.response-title {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.response-name {
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.response-time {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.response-text {
+  font-size: 13px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+/* Bottom Navigation */
+.bottom-nav {
+  background: var(--bg-card);
+  border-top: 1px solid var(--border);
+  padding: 10px 16px;
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.nav-btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  background: var(--bg-surface);
+  border: none;
+  color: var(--text-primary);
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.nav-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-overlay.active {
+  display: flex;
+}
+
+.modal {
+  background: var(--bg-card);
+  border-radius: 16px;
+  width: 100%;
+  max-width: 500px;
+  max-height: 90vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.modal-header {
+  padding: 20px;
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-body {
+  padding: 20px;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.modal-footer {
+  padding: 20px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  gap: 10px;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
   display: block;
   margin-bottom: 8px;
   font-size: 14px;
-  opacity: 0.8;
+  font-weight: 500;
 }
-.popup select {
+
+.form-input, .form-select, .form-textarea {
   width: 100%;
-  background: #020617;
-  color: white;
-  border: 1px solid #374151;
-  border-radius: 8px;
-  padding: 8px 12px;
-  font-size: 14px;
-  cursor: pointer;
-}
-.popup select:focus { outline: none; border-color: #22c55e; }
-.responses {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 20px;
-}
-.card {
-  background: #020617;
-  border-radius: 18px;
-  padding: 20px;
-  border-left: 6px solid;
-  white-space: pre-wrap;
-  line-height: 1.6;
-  box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-}
-.card strong {
-  display: block;
-  margin-bottom: 12px;
-  font-size: 18px;
-}
-.card small {
-  opacity: 0.7;
-  font-size: 12px;
-}
-.modal {
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.8);
-  display: none;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-.modal-content {
-  background: #020617;
-  padding: 24px;
-  border-radius: 16px;
-  width: 400px;
-  max-width: 90vw;
-  border: 1px solid #374151;
-}
-.modal-content h3 {
-  margin-top: 0;
-  margin-bottom: 20px;
-}
-.modal-content input,
-.modal-content textarea,
-.modal-content select {
-  width: 100%;
-  margin-bottom: 16px;
   padding: 12px;
-  background: #0b1220;
-  border: 1px solid #374151;
-  color: white;
-  border-radius: 8px;
+  border-radius: 10px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border);
+  color: var(--text-primary);
+  font-size: 14px;
   font-family: inherit;
 }
-.modal-content textarea {
+
+.form-textarea {
   min-height: 100px;
   resize: vertical;
 }
-.modal-content button {
-  margin-top: 8px;
-  width: 100%;
-  padding: 12px;
-  background: #22c55e;
-  color: white;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 16px;
-}
-.modal-content button:hover { opacity: 0.9; }
-.loader {
-  border: 3px solid rgba(243, 243, 243, 0.2);
-  border-top: 3px solid #22c55e;
-  border-radius: 50%;
-  width: 20px;
-  height: 20px;
-  animation: spin 1s linear infinite;
-  display: inline-block;
-  vertical-align: middle;
-}
-@keyframes spin {
-  0% { transform: rotate(0deg);}
-  100% { transform: rotate(360deg);}
-}
-.status {
-  padding: 8px 12px;
-  border-radius: 8px;
-  font-size: 14px;
+
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
   margin-top: 10px;
 }
-.status.success { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
-.status.error { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+.color-option {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 16px;
+}
+
+.color-option.selected {
+  border-color: white;
+  transform: scale(1.1);
+}
+
+/* Loading State */
+.loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top-color: white;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) {
+  .node-btn:hover {
+    background: var(--bg-surface);
+    color: var(--text-secondary);
+  }
+  
+  .node-btn:active {
+    background: var(--primary);
+    color: white;
+  }
+  
+  .connector:hover {
+    transform: none;
+  }
+  
+  .connector:active {
+    transform: scale(1.1);
+  }
+}
+
+/* Mobile-specific optimizations */
 @media (max-width: 768px) {
-  .wrapper { grid-template-columns: 1fr; }
-  .sidebar { border-right: none; border-bottom: 1px solid #1e293b; }
-  .popup { right: 10px; top: 60px; }
-  .responses { grid-template-columns: 1fr; }
+  .workspace {
+    padding: 10px;
+  }
+  
+  .ai-node {
+    width: 240px;
+  }
+  
+  .btn span {
+    display: none;
+  }
+  
+  .btn i {
+    margin: 0;
+  }
+  
+  .response-panel {
+    max-height: 30vh;
+  }
+}
+
+/* Small phones */
+@media (max-width: 480px) {
+  .header {
+    padding: 10px 12px;
+  }
+  
+  .logo-text {
+    display: none;
+  }
+  
+  .workspace {
+    padding: 8px;
+  }
+  
+  .ai-node {
+    width: 220px;
+  }
+  
+  .node-header {
+    padding: 12px;
+  }
+  
+  .node-body {
+    padding: 12px;
+  }
+}
+
+/* Dark mode adjustments */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg-dark: #0a0a0a;
+    --bg-card: #1a1a1a;
+    --bg-surface: #262626;
+    --border: #404040;
+  }
+}
+
+/* Safe area for notch phones */
+@supports (padding: max(0px)) {
+  .header {
+    padding-top: max(12px, env(safe-area-inset-top));
+    padding-left: max(16px, env(safe-area-inset-left));
+    padding-right: max(16px, env(safe-area-inset-right));
+  }
+  
+  .bottom-nav {
+    padding-bottom: max(10px, env(safe-area-inset-bottom));
+  }
 }
 </style>
 </head>
 <body>
-<div class="wrapper">
-  <div class="sidebar">
-    <div class="sidebar-header">
-      <h3>Personalities</h3>
-      <button class="add-btn" onclick="addPersonality()">+ Add New</button>
+<div class="app-container">
+  <!-- Header -->
+  <header class="header">
+    <div class="logo">
+      <div class="logo-icon">
+        <i class="fas fa-brain"></i>
+      </div>
+      <span class="logo-text">AI Pipeline</span>
     </div>
-    <div id="list"></div>
-  </div>
-  
-  <div class="main">
-    <div class="top">
-      <input id="question" placeholder="Ask something from all personalities..." />
-      <button id="runBtn" onclick="run()">Run All</button>
-      <button class="gear" id="settings" onclick="togglePopup()" title="Settings">
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50" width="25" height="25">
-          <path fill="white" d="M47.16 21.221l-5.91-.966c-.346-1.186-.819-2.326-1.411-3.405l3.45-4.917c.279-.397.231-.938-.112-1.282l-3.889-3.887c-.347-.346-.893-.391-1.291-.104l-4.843 3.481c-1.089-.602-2.239-1.08-3.432-1.427l-1.031-5.886C28.607 2.35 28.192 2 27.706 2h-5.5c-.49 0-.908.355-.987.839l-.956 5.854c-1.2.345-2.352.818-3.437 1.412l-4.83-3.45c-.399-.285-.942-.239-1.289.106L6.82 10.648c-.343.343-.391.883-.112 1.28l3.399 4.863c-.605 1.095-1.087 2.254-1.438 3.46l-5.831.971c-.482.08-.836.498-.836.986v5.5c0 .485.348.9.825.985l5.831 1.034c.349 1.203.831 2.362 1.438 3.46l-3.441 4.813c-.284.397-.239.942.106 1.289l3.888 3.891c.343.343.884.391 1.281.112l4.87-3.411c1.093.601 2.248 1.078 3.445 1.424l.976 5.861C21.3 47.647 21.717 48 22.206 48h5.5c.485 0 .9-.348.984-.825l1.045-5.89c1.199-.353 2.348-.833 3.43-1.435l4.905 3.441c.398.281.938.232 1.282-.111l3.888-3.891c.346-.347.391-.894.104-1.292l-3.498-4.857c.593-1.08 1.064-2.222 1.407-3.408l5.918-1.039c.479-.084.827-.5.827-.985v-5.5c0-.482-.355-.9-.839-.979zM25 32c-3.866 0-7-3.134-7-7 0-3.866 3.134-7 7-7s7 3.134 7 7c0 3.866-3.134 7-7 7z"/>
-        </svg>
+    
+    <div class="header-actions">
+      <button class="btn btn-sm" onclick="toggleSidebar()">
+        <i class="fas fa-layer-group"></i>
+        <span>Models</span>
       </button>
-      <div class="popup" id="popup">
-        <label>Text Direction:</label>
-        <select id="dirSelect" onchange="changeDirection()">
-          <option value="ltr">Left to Right (LTR)</option>
-          <option value="rtl">Right to Left (RTL)</option>
-        </select>
+      <button class="btn btn-success btn-sm" onclick="runAllModels()">
+        <i class="fas fa-play"></i>
+        <span>Run All</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <div class="main-content">
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-section">
+        <div class="section-title">
+          <span>AI Models</span>
+          <button class="node-btn" onclick="openModelModal()">
+            <i class="fas fa-plus"></i>
+          </button>
+        </div>
+        <div id="model-list">
+          <!-- Models will be loaded here -->
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="section-title">Workspace</div>
+        <div style="display: flex; flex-direction: column; gap: 10px;">
+          <button class="nav-btn" onclick="clearWorkspace()">
+            <i class="fas fa-trash"></i> Clear
+          </button>
+          <button class="nav-btn" onclick="saveWorkspace()">
+            <i class="fas fa-save"></i> Save
+          </button>
+          <button class="nav-btn" onclick="loadWorkspace()">
+            <i class="fas fa-folder-open"></i> Load
+          </button>
+        </div>
       </div>
     </div>
-    
-    <div id="status" class="status"></div>
-    
-    <div id="responses" class="responses"></div>
+
+    <!-- Workspace -->
+    <div class="workspace" id="workspace">
+      <!-- AI Nodes will be placed here -->
+    </div>
+  </div>
+
+  <!-- Response Panel -->
+  <div class="response-panel" id="response-panel">
+    <div class="response-header">
+      <span>Responses</span>
+      <button class="node-btn" onclick="clearResponses()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="response-content" id="response-content">
+      <!-- Responses will appear here -->
+    </div>
+  </div>
+
+  <!-- Bottom Navigation -->
+  <div class="bottom-nav">
+    <button class="nav-btn active" onclick="showTab('workspace')">
+      <i class="fas fa-project-diagram"></i> Workspace
+    </button>
+    <button class="nav-btn" onclick="showTab('connections')">
+      <i class="fas fa-link"></i> Connections
+    </button>
+    <button class="nav-btn" onclick="showTab('settings')">
+      <i class="fas fa-cog"></i> Settings
+    </button>
+    <button class="nav-btn" onclick="showTab('batch')">
+      <i class="fas fa-bolt"></i> Batch Run
+    </button>
   </div>
 </div>
 
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h3>Edit Personality</h3>
-    <input id="mName" placeholder="Personality Name">
-    <input id="mIcon" placeholder="Icon (emoji)">
-    <input id="mColor" placeholder="Color (#hex code)">
-    <select id="mModel">
-      <option value="openai/gpt-oss-20b:free">GPT OSS 20B (Free)</option>
-      <option value="google/gemma-3-27b-it:free">Gemma 3 27B (Free)</option>
-      <option value="mistralai/devstral-2512:free">Devstral 25B (Free)</option>
-      <option value="tngtech/deepseek-r1t2-chimera:free">DeepSeek R1 Chimera (Free)</option>
-      <option value="nvidia/nemotron-nano-12b-v2-vl:free">Nemotron Nano 12B (Free)</option>
-      <option value="qwen/qwen3-coder:free">Qwen Coder (Free)</option>
-    </select>
-    <textarea id="mPrompt" rows="4" placeholder="System prompt and behavior description"></textarea>
-    <button onclick="savePersonality()">Save Changes</button>
+<!-- Model Creation Modal -->
+<div class="modal-overlay" id="model-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Create AI Model</h3>
+      <button class="node-btn" onclick="closeModelModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Model Name</label>
+        <input type="text" class="form-input" id="model-name" placeholder="e.g., Creative Writer">
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Icon & Color</label>
+        <div class="color-grid">
+          <div class="color-option selected" style="background: #6366f1;" data-color="#6366f1">
+            <i class="fas fa-robot"></i>
+          </div>
+          <div class="color-option" style="background: #10b981;" data-color="#10b981">
+            <i class="fas fa-lightbulb"></i>
+          </div>
+          <div class="color-option" style="background: #8b5cf6;" data-color="#8b5cf6">
+            <i class="fas fa-code"></i>
+          </div>
+          <div class="color-option" style="background: #f59e0b;" data-color="#f59e0b">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <div class="color-option" style="background: #ec4899;" data-color="#ec4899">
+            <i class="fas fa-comment-medical"></i>
+          </div>
+        </div>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">AI Model</label>
+        <select class="form-select" id="model-type">
+          <option value="gpt-4">GPT-4</option>
+          <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+          <option value="claude-3">Claude 3</option>
+          <option value="gemini-pro">Gemini Pro</option>
+          <option value="llama-3">Llama 3</option>
+          <option value="mistral">Mistral</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">System Prompt</label>
+        <textarea class="form-textarea" id="model-prompt" placeholder="Describe how this model should behave..."></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Temperature</label>
+        <input type="range" class="form-input" id="model-temp" min="0" max="1" step="0.1" value="0.7">
+        <span id="temp-value-display">0.7</span>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn" onclick="closeModelModal()">Cancel</button>
+      <button class="btn btn-success" onclick="saveModel()">Create Model</button>
+    </div>
+  </div>
+</div>
+
+<!-- Batch Run Modal -->
+<div class="modal-overlay" id="batch-modal">
+  <div class="modal">
+    <div class="modal-header">
+      <h3>Batch Run Configuration</h3>
+      <button class="node-btn" onclick="closeBatchModal()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    
+    <div class="modal-body">
+      <div class="form-group">
+        <label class="form-label">Input Prompt</label>
+        <textarea class="form-textarea" id="batch-input" placeholder="Enter prompt to send to all models..."></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Run Mode</label>
+        <select class="form-select" id="batch-mode">
+          <option value="parallel">Run All Models in Parallel</option>
+          <option value="sequential">Run Connected Models Sequentially</option>
+          <option value="group">Run Groups Separately</option>
+        </select>
+      </div>
+      
+      <div class="form-group">
+        <label class="form-label">Selected Models</label>
+        <div id="model-selection">
+          <!-- Model checkboxes will be added here -->
+        </div>
+      </div>
+    </div>
+    
+    <div class="modal-footer">
+      <button class="btn" onclick="closeBatchModal()">Cancel</button>
+      <button class="btn btn-success" onclick="executeBatchRun()">
+        <i class="fas fa-play"></i> Run Batch
+      </button>
+    </div>
   </div>
 </div>
 
 <script>
-// Configuration
-const API_URL = "https://ai-openrouter-proxy.abolfazl-kbahrami-ec0.workers.dev";
-// یا اگر Worker جدید ساختی:
-// const API_URL = "https://your-worker-name.your-account.workers.dev";
-
-// Data
-let personalities = [
-  {
-    name: "Creative Assistant",
-    icon: "🎨",
-    color: "#fb7185",
-    model: "openai/gpt-oss-20b:free",
-    prompt: "You are a creative assistant. Generate innovative ideas, creative solutions, and think outside the box. Be imaginative and original in your responses."
-  },
-  {
-    name: "Logical Thinker",
-    icon: "🧠",
-    color: "#38bdf8",
-    model: "tngtech/deepseek-r1t2-chimera:free",
-    prompt: "You are a logical thinker. Analyze problems step by step, provide structured reasoning, and give clear, rational explanations. Avoid emotional language."
-  },
-  {
-    name: "Summarizer",
-    icon: "📌",
-    color: "#a78bfa",
-    model: "mistralai/devstral-2512:free",
-    prompt: "You are a summarizer. Take complex information and distill it into clear, concise summaries. Focus on key points and main ideas. Keep it brief but comprehensive."
-  }
-];
-
-let editIndex = null;
+// State Management
+const state = {
+  models: [
+    {
+      id: 'model1',
+      name: 'Creative Writer',
+      icon: 'fas fa-pen-nib',
+      color: '#6366f1',
+      type: 'gpt-4',
+      prompt: 'You are a creative writer specializing in storytelling, metaphors, and engaging narratives.',
+      temperature: 0.7
+    },
+    {
+      id: 'model2',
+      name: 'Technical Analyst',
+      icon: 'fas fa-chart-line',
+      color: '#10b981',
+      type: 'claude-3',
+      prompt: 'You are a technical analyst who breaks down complex topics into logical, structured explanations.',
+      temperature: 0.3
+    },
+    {
+      id: 'model3',
+      name: 'Code Assistant',
+      icon: 'fas fa-code',
+      color: '#8b5cf6',
+      type: 'gpt-3.5-turbo',
+      prompt: 'You are an expert programming assistant specializing in clean, efficient code across multiple languages.',
+      temperature: 0.5
+    }
+  ],
+  nodes: [],
+  connections: [],
+  selectedNode: null,
+  isConnecting: false,
+  connectionStart: null,
+  responses: []
+};
 
 // DOM Elements
-const list = document.getElementById('list');
-const question = document.getElementById('question');
-const runBtn = document.getElementById('runBtn');
-const responses = document.getElementById('responses');
-const popup = document.getElementById('popup');
-const modal = document.getElementById('modal');
-const dirSelect = document.getElementById('dirSelect');
-const mName = document.getElementById('mName');
-const mIcon = document.getElementById('mIcon');
-const mColor = document.getElementById('mColor');
-const mModel = document.getElementById('mModel');
-const mPrompt = document.getElementById('mPrompt');
-const statusEl = document.getElementById('status');
+const workspace = document.getElementById('workspace');
+const modelList = document.getElementById('model-list');
+const responseContent = document.getElementById('response-content');
+const modelModal = document.getElementById('model-modal');
+const batchModal = document.getElementById('batch-modal');
 
-// Render personality list
-function renderList() {
-  list.innerHTML = "";
-  personalities.forEach((p, i) => {
-    const row = document.createElement("div");
-    row.className = "person-row";
-    row.innerHTML = `
-      <div class="row-header" onclick="this.parentNode.classList.toggle('open')">
-        <div class="row-left">
-          <span style="font-size: 20px">${p.icon}</span>
-          <strong>${p.name}</strong>
+// Initialize
+init();
+
+function init() {
+  renderModelList();
+  setupEventListeners();
+  loadDefaultNodes();
+}
+
+function renderModelList() {
+  modelList.innerHTML = '';
+  state.models.forEach(model => {
+    const div = document.createElement('div');
+    div.className = 'personality-item';
+    div.draggable = true;
+    div.innerHTML = `
+      <div class="personality-header">
+        <div class="personality-icon" style="background: ${model.color}">
+          <i class="${model.icon}"></i>
         </div>
-        <div class="actions">
-          <span class="expand">➜</span>
-          <span class="edit" onclick="event.stopPropagation(); openModal(${i})" title="Edit">✏️</span>
+        <div>
+          <div class="personality-name">${model.name}</div>
+          <div class="personality-model">${model.type}</div>
         </div>
-      </div>
-      <div class="row-body">
-        <div><strong>Model:</strong> ${p.model}</div>
-        <div><strong>Prompt:</strong> ${p.prompt}</div>
       </div>
     `;
-    list.appendChild(row);
-  });
-}
-
-// Open edit modal
-function openModal(i) {
-  editIndex = i;
-  const p = personalities[i];
-  mName.value = p.name;
-  mIcon.value = p.icon;
-  mColor.value = p.color;
-  mModel.value = p.model;
-  mPrompt.value = p.prompt;
-  modal.style.display = "flex";
-}
-
-// Save personality changes
-function savePersonality() {
-  if (editIndex === null) return;
-  
-  personalities[editIndex] = {
-    name: mName.value.trim() || "Unnamed",
-    icon: mIcon.value.trim() || "🤖",
-    color: mColor.value.trim() || "#22c55e",
-    model: mModel.value,
-    prompt: mPrompt.value.trim() || "No prompt provided."
-  };
-  
-  modal.style.display = "none";
-  renderList();
-  showStatus("Personality saved successfully!", "success");
-}
-
-// Add new personality
-function addPersonality() {
-  personalities.push({
-    name: "New Personality",
-    icon: "🤖",
-    color: "#22c55e",
-    model: "openai/gpt-oss-20b:free",
-    prompt: "Describe your personality and behavior here..."
-  });
-  
-  renderList();
-  openModal(personalities.length - 1);
-  showStatus("New personality added!", "success");
-}
-
-// Call AI API
-async function callAI(p, input) {
-  try {
-    console.log(`Calling ${p.name} with model: ${p.model}`);
     
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: { 
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        model: p.model,
-        messages: [
-          { role: "system", content: p.prompt },
-          { role: "user", content: input }
-        ],
-        max_tokens: 1000,
-        temperature: 0.7
-      })
+    div.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('modelId', model.id);
     });
     
-    const data = await response.json();
+    div.addEventListener('click', () => {
+      addNodeToWorkspace(model);
+    });
     
-    if (!response.ok) {
-      throw new Error(data.error?.message || `API Error ${response.status}`);
-    }
-    
-    if (data.choices && data.choices[0] && data.choices[0].message) {
-      return data.choices[0].message.content;
-    } else if (data.error) {
-      return `Error: ${data.error.message}`;
-    } else {
-      return "No response generated.";
-    }
-    
-  } catch (error) {
-    console.error(`Error in ${p.name}:`, error);
-    return `Error: ${error.message}`;
-  }
+    modelList.appendChild(div);
+  });
 }
 
-// Run all personalities
-async function run() {
-  const input = question.value.trim();
-  if (!input) {
-    showStatus("Please enter a question first!", "error");
-    question.focus();
+function setupEventListeners() {
+  // Workspace drop zone
+  workspace.addEventListener('dragover', (e) => {
+    e.preventDefault();
+  });
+  
+  workspace.addEventListener('drop', (e) => {
+    e.preventDefault();
+    const modelId = e.dataTransfer.getData('modelId');
+    const model = state.models.find(m => m.id === modelId);
+    if (model) {
+      const rect = workspace.getBoundingClientRect();
+      const x = e.clientX - rect.left - 130; // Center node
+      const y = e.clientY - rect.top - 80;
+      addNodeToWorkspace(model, x, y);
+    }
+  });
+  
+  // Touch events for mobile
+  workspace.addEventListener('touchstart', handleTouchStart, { passive: false });
+  workspace.addEventListener('touchmove', handleTouchMove, { passive: false });
+  workspace.addEventListener('touchend', handleTouchEnd, { passive: false });
+  
+  // Temperature slider
+  document.getElementById('model-temp').addEventListener('input', (e) => {
+    document.getElementById('temp-value-display').textContent = e.target.value;
+  });
+}
+
+function addNodeToWorkspace(model, x = 100, y = 100) {
+  const nodeId = 'node_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+  
+  const node = {
+    id: nodeId,
+    modelId: model.id,
+    x: Math.max(0, Math.min(x, workspace.scrollWidth - 260)),
+    y: Math.max(0, Math.min(y, workspace.scrollHeight - 200)),
+    connections: {
+      inputs: [],
+      outputs: []
+    },
+    status: 'idle'
+  };
+  
+  state.nodes.push(node);
+  renderNode(node, model);
+  saveToLocalStorage();
+}
+
+function renderNode(node, model) {
+  const nodeEl = document.createElement('div');
+  nodeEl.className = 'ai-node';
+  nodeEl.id = node.id;
+  nodeEl.style.left = node.x + 'px';
+  nodeEl.style.top = node.y + 'px';
+  nodeEl.dataset.modelId = model.id;
+  
+  nodeEl.innerHTML = `
+    <div class="node-header">
+      <div class="node-title">
+        <div class="node-icon" style="background: ${model.color}">
+          <i class="${model.icon}"></i>
+        </div>
+        <div class="node-text">
+          <div class="node-name">${model.name}</div>
+          <div class="node-model">${model.type}</div>
+        </div>
+      </div>
+      <div class="node-actions">
+        <button class="node-btn" onclick="runSingleNode('${node.id}')" title="Run">
+          <i class="fas fa-play"></i>
+        </button>
+        <button class="node-btn" onclick="deleteNode('${node.id}')" title="Delete">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+    </div>
+    <div class="node-body">
+      ${model.prompt.substring(0, 100)}...
+    </div>
+    <div class="node-connectors">
+      <div class="connector connector-input" 
+           onmousedown="startConnection('${node.id}', 'input')"
+           ontouchstart="startConnection('${node.id}', 'input')">
+        <i class="fas fa-arrow-right"></i>
+        <div class="connector-label">Input</div>
+      </div>
+      <div class="connector connector-output"
+           onmousedown="startConnection('${node.id}', 'output')"
+           ontouchstart="startConnection('${node.id}', 'output')">
+        <i class="fas fa-arrow-right"></i>
+        <div class="connector-label">Output</div>
+      </div>
+    </div>
+  `;
+  
+  workspace.appendChild(nodeEl);
+  makeNodeDraggable(nodeEl, node);
+  updateConnections();
+}
+
+function makeNodeDraggable(element, node) {
+  let isDragging = false;
+  let startX, startY, initialX, initialY;
+  
+  const startDrag = (clientX, clientY) => {
+    isDragging = true;
+    const rect = element.getBoundingClientRect();
+    startX = clientX - rect.left;
+    startY = clientY - rect.top;
+    initialX = node.x;
+    initialY = node.y;
+    element.style.zIndex = '100';
+    document.addEventListener('mousemove', onDrag);
+    document.addEventListener('mouseup', stopDrag);
+  };
+  
+  const onDrag = (e) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    
+    const rect = workspace.getBoundingClientRect();
+    const x = e.clientX - rect.left - startX;
+    const y = e.clientY - rect.top - startY;
+    
+    // Constrain to workspace bounds
+    const maxX = workspace.scrollWidth - element.offsetWidth;
+    const maxY = workspace.scrollHeight - element.offsetHeight;
+    
+    node.x = Math.max(0, Math.min(x, maxX));
+    node.y = Math.max(0, Math.min(y, maxY));
+    
+    element.style.left = node.x + 'px';
+    element.style.top = node.y + 'px';
+    
+    updateConnections();
+  };
+  
+  const stopDrag = () => {
+    isDragging = false;
+    element.style.zIndex = '10';
+    document.removeEventListener('mousemove', onDrag);
+    document.removeEventListener('mouseup', stopDrag);
+    saveToLocalStorage();
+  };
+  
+  // Mouse events
+  element.addEventListener('mousedown', (e) => {
+    if (e.target.closest('.connector') || e.target.closest('.node-btn')) return;
+    startDrag(e.clientX, e.clientY);
+  });
+  
+  // Touch events
+  element.addEventListener('touchstart', (e) => {
+    if (e.target.closest('.connector') || e.target.closest('.node-btn')) return;
+    e.preventDefault();
+    const touch = e.touches[0];
+    startDrag(touch.clientX, touch.clientY);
+  }, { passive: false });
+}
+
+function startConnection(nodeId, type) {
+  state.isConnecting = true;
+  state.connectionStart = { nodeId, type };
+  
+  const nodeEl = document.getElementById(nodeId);
+  const connector = nodeEl.querySelector(type === 'input' ? '.connector-input' : '.connector-output');
+  const rect = connector.getBoundingClientRect();
+  const workspaceRect = workspace.getBoundingClientRect();
+  
+  state.connectionStart.x = rect.left + rect.width / 2 - workspaceRect.left;
+  state.connectionStart.y = rect.top + rect.height / 2 - workspaceRect.top;
+  
+  createConnectionPreview();
+}
+
+function createConnectionPreview() {
+  const preview = document.createElement('div');
+  preview.className = 'connection-line';
+  preview.id = 'connection-preview';
+  workspace.appendChild(preview);
+  
+  const updatePreview = (x, y) => {
+    const path = createCurvedPath(
+      state.connectionStart.x,
+      state.connectionStart.y,
+      x,
+      y
+    );
+    
+    preview.innerHTML = `
+      <svg width="100%" height="100%">
+        <path d="${path}" />
+      </svg>
+    `;
+  };
+  
+  const onMouseMove = (e) => {
+    const rect = workspace.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    updatePreview(x, y);
+  };
+  
+  const onTouchMove = (e) => {
+    const rect = workspace.getBoundingClientRect();
+    const touch = e.touches[0];
+    const x = touch.clientX - rect.left;
+    const y = touch.clientY - rect.top;
+    updatePreview(x, y);
+  };
+  
+  const finishConnection = (targetNodeId, targetType) => {
+    if (state.connectionStart.type === 'output' && targetType === 'input') {
+      // Output to Input connection
+      state.connections.push({
+        from: state.connectionStart.nodeId,
+        to: targetNodeId
+      });
+      
+      // Update node connections
+      const fromNode = state.nodes.find(n => n.id === state.connectionStart.nodeId);
+      const toNode = state.nodes.find(n => n.id === targetNodeId);
+      
+      if (fromNode && toNode) {
+        fromNode.connections.outputs.push(targetNodeId);
+        toNode.connections.inputs.push(state.connectionStart.nodeId);
+      }
+      
+      updateConnections();
+      saveToLocalStorage();
+    }
+    
+    cleanupConnection();
+  };
+  
+  const cleanupConnection = () => {
+    state.isConnecting = false;
+    state.connectionStart = null;
+    preview.remove();
+    document.removeEventListener('mousemove', onMouseMove);
+    document.removeEventListener('mouseup', onMouseUp);
+    document.removeEventListener('touchmove', onTouchMove);
+    document.removeEventListener('touchend', onTouchEnd);
+  };
+  
+  const onMouseUp = (e) => {
+    const target = e.target.closest('.connector');
+    if (target) {
+      const targetNodeId = target.closest('.ai-node').id;
+      const targetType = target.classList.contains('connector-input') ? 'input' : 'output';
+      finishConnection(targetNodeId, targetType);
+    } else {
+      cleanupConnection();
+    }
+  };
+  
+  const onTouchEnd = (e) => {
+    const touch = e.changedTouches[0];
+    const target = document.elementFromPoint(touch.clientX, touch.clientY);
+    const connector = target?.closest('.connector');
+    
+    if (connector) {
+      const targetNodeId = connector.closest('.ai-node').id;
+      const targetType = connector.classList.contains('connector-input') ? 'input' : 'output';
+      finishConnection(targetNodeId, targetType);
+    } else {
+      cleanupConnection();
+    }
+  };
+  
+  document.addEventListener('mousemove', onMouseMove);
+  document.addEventListener('mouseup', onMouseUp);
+  document.addEventListener('touchmove', onTouchMove, { passive: false });
+  document.addEventListener('touchend', onTouchEnd, { passive: false });
+}
+
+function createCurvedPath(x1, y1, x2, y2) {
+  const midX = (x1 + x2) / 2;
+  const curve = 50;
+  return `M ${x1} ${y1} C ${midX} ${y1}, ${midX} ${y2}, ${x2} ${y2}`;
+}
+
+function updateConnections() {
+  // Remove existing connections
+  document.querySelectorAll('.connection-line:not(#connection-preview)').forEach(el => el.remove());
+  
+  // Render all connections
+  state.connections.forEach(conn => {
+    const fromNode = document.getElementById(conn.from);
+    const toNode = document.getElementById(conn.to);
+    
+    if (!fromNode || !toNode) return;
+    
+    const fromOutput = fromNode.querySelector('.connector-output');
+    const toInput = toNode.querySelector('.connector-input');
+    
+    if (!fromOutput || !toInput) return;
+    
+    const fromRect = fromOutput.getBoundingClientRect();
+    const toRect = toInput.getBoundingClientRect();
+    const workspaceRect = workspace.getBoundingClientRect();
+    
+    const startX = fromRect.left + fromRect.width / 2 - workspaceRect.left;
+    const startY = fromRect.top + fromRect.height / 2 - workspaceRect.top;
+    const endX = toRect.left + toRect.width / 2 - workspaceRect.left;
+    const endY = toRect.top + toRect.height / 2 - workspaceRect.top;
+    
+    const path = createCurvedPath(startX, startY, endX, endY);
+    
+    const line = document.createElement('div');
+    line.className = 'connection-line';
+    line.innerHTML = `
+      <svg width="100%" height="100%">
+        <path d="${path}" />
+      </svg>
+    `;
+    
+    workspace.appendChild(line);
+  });
+}
+
+async function runSingleNode(nodeId) {
+  const node = state.nodes.find(n => n.id === nodeId);
+  const model = state.models.find(m => m.id === node.modelId);
+  if (!node || !model) return;
+  
+  // Get input from connected nodes
+  let inputText = '';
+  if (node.connections.inputs.length > 0) {
+    const inputNode = state.nodes.find(n => n.id === node.connections.inputs[0]);
+    if (inputNode && state.responses.some(r => r.nodeId === inputNode.id)) {
+      const lastResponse = state.responses.filter(r => r.nodeId === inputNode.id).pop();
+      inputText = lastResponse.content;
+    }
+  }
+  
+  if (!inputText) {
+    inputText = prompt(`Enter input for ${model.name}:`) || '';
+  }
+  
+  if (!inputText.trim()) {
+    alert('Please provide input text');
     return;
   }
   
-  // Disable button and show loading
+  await callAI(node, model, inputText);
+}
+
+async function runAllModels() {
+  const input = prompt('Enter initial prompt for all models:');
+  if (!input) return;
+  
+  // Clear previous responses
+  state.responses = [];
+  responseContent.innerHTML = '<div class="loading"><span class="spinner"></span> Running pipeline...</div>';
+  
+  // Group 1: Nodes without inputs (starting points)
+  const startNodes = state.nodes.filter(node => node.connections.inputs.length === 0);
+  
+  // Group 2: Connected chains
+  const connectedChains = [];
+  const visited = new Set();
+  
+  for (const node of state.nodes) {
+    if (!visited.has(node.id) && node.connections.inputs.length > 0) {
+      const chain = [];
+      let current = node;
+      while (current && !visited.has(current.id)) {
+        visited.add(current.id);
+        chain.push(current);
+        // Move to next in chain
+        if (current.connections.outputs.length > 0) {
+          const nextId = current.connections.outputs[0];
+          current = state.nodes.find(n => n.id === nextId);
+        } else {
+          break;
+        }
+      }
+      if (chain.length > 0) {
+        connectedChains.push(chain);
+      }
+    }
+  }
+  
+  // Run start nodes in parallel
+  await Promise.all(startNodes.map(async (node) => {
+    const model = state.models.find(m => m.id === node.modelId);
+    if (model) {
+      await callAI(node, model, input);
+    }
+  }));
+  
+  // Run connected chains
+  for (const chain of connectedChains) {
+    let chainInput = input;
+    for (const node of chain) {
+      const model = state.models.find(m => m.id === node.modelId);
+      if (model) {
+        const response = await callAI(node, model, chainInput, true);
+        if (response) {
+          chainInput = response.content;
+        }
+      }
+    }
+  }
+}
+
+async function callAI(node, model, input, isChain = false) {
+  const nodeEl = document.getElementById(node.id);
+  const runBtn = nodeEl.querySelector('.node-btn');
+  const originalHTML = runBtn.innerHTML;
+  
+  // Show loading
+  runBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
   runBtn.disabled = true;
-  runBtn.innerHTML = 'Running <span class="loader"></span>';
-  responses.innerHTML = "";
-  showStatus("Processing your request...", "success");
+  nodeEl.style.borderColor = '#f59e0b';
   
-  const dir = dirSelect.value;
-  
-  // Process each personality sequentially
-  for (let i = 0; i < personalities.length; i++) {
-    const p = personalities[i];
+  try {
+    // Simulate API call (replace with actual API)
+    await new Promise(resolve => setTimeout(resolve, 1500));
     
-    // Create card
-    const card = document.createElement("div");
-    card.className = "card";
-    card.style.borderColor = p.color;
-    card.style.textAlign = dir === "rtl" ? "right" : "left";
-    card.innerHTML = `
-      <strong>${p.icon} ${p.name} <small>(${p.model})</small></strong>
-      <p><i>Loading...</i></p>
-    `;
-    responses.appendChild(card);
+    // Generate mock response based on model type
+    const responses = {
+      'gpt-4': `As ${model.name}, I would say: "${input}"\n\nI've analyzed this thoroughly and here's my comprehensive response. The key points are...`,
+      'claude-3': `From a technical perspective: ${input}\n\nLet me break this down systematically:\n1. First point\n2. Second point\n3. Conclusion`,
+      'gpt-3.5-turbo': `Here's a quick response: ${input.substring(0, 100)}...\n\nI can help you with this!`,
+      'creative': `✨ Once upon a time... ${input} ✨\n\nAnd so the story unfolds with creativity and imagination!`
+    };
     
-    // Get response
-    const text = await callAI(p, input);
+    const content = responses[model.type] || `Response from ${model.name}: ${input}`;
     
-    // Update card
-    card.querySelector('p').innerText = text;
-  }
-  
-  // Re-enable button
-  runBtn.disabled = false;
-  runBtn.innerHTML = 'Run All';
-  showStatus(`Responses generated for ${personalities.length} personalities`, "success");
-  
-  // Scroll to responses
-  responses.scrollIntoView({ behavior: "smooth", block: "nearest" });
-}
-
-// UI Helpers
-function togglePopup() {
-  popup.style.display = popup.style.display === "flex" ? "none" : "flex";
-}
-
-function changeDirection() {
-  const dir = dirSelect.value;
-  question.style.textAlign = dir === "rtl" ? "right" : "left";
-  document.querySelectorAll(".card").forEach(c => {
-    c.style.textAlign = dir === "rtl" ? "right" : "left";
-  });
-}
-
-function showStatus(message, type) {
-  statusEl.textContent = message;
-  statusEl.className = `status ${type}`;
-  statusEl.style.display = "block";
-  
-  if (type !== "error") {
+    // Store response
+    const response = {
+      id: 'resp_' + Date.now(),
+      nodeId: node.id,
+      modelName: model.name,
+      modelType: model.type,
+      content: content,
+      timestamp: new Date().toISOString(),
+      input: input
+    };
+    
+    state.responses.push(response);
+    renderResponse(response);
+    
+    // Visual feedback
+    nodeEl.style.borderColor = '#10b981';
     setTimeout(() => {
-      statusEl.style.display = "none";
-    }, 3000);
+      nodeEl.style.borderColor = model.color;
+    }, 2000);
+    
+    return response;
+    
+  } catch (error) {
+    console.error('Error:', error);
+    const errorResponse = {
+      id: 'err_' + Date.now(),
+      nodeId: node.id,
+      modelName: model.name,
+      modelType: model.type,
+      content: `Error: ${error.message}`,
+      timestamp: new Date().toISOString(),
+      input: input,
+      isError: true
+    };
+    
+    state.responses.push(errorResponse);
+    renderResponse(errorResponse);
+    
+    nodeEl.style.borderColor = '#ef4444';
+    setTimeout(() => {
+      nodeEl.style.borderColor = model.color;
+    }, 2000);
+    
+  } finally {
+    runBtn.innerHTML = originalHTML;
+    runBtn.disabled = false;
   }
 }
 
-// Event Listeners
-question.addEventListener("keypress", function(e) {
-  if (e.key === "Enter" && !e.shiftKey) {
+function renderResponse(response) {
+  const responseEl = document.createElement('div');
+  responseEl.className = 'response-item';
+  if (response.isError) {
+    responseEl.style.borderLeftColor = '#ef4444';
+  }
+  
+  responseEl.innerHTML = `
+    <div class="response-title">
+      <span class="response-name">${response.modelName}</span>
+      <span class="response-time">${new Date(response.timestamp).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}</span>
+    </div>
+    <div class="response-text">${response.content.substring(0, 200)}${response.content.length > 200 ? '...' : ''}</div>
+  `;
+  
+  responseEl.addEventListener('click', () => {
+    alert(response.content);
+  });
+  
+  responseContent.prepend(responseEl);
+  
+  // Auto-scroll to top
+  responseContent.scrollTop = 0;
+}
+
+function deleteNode(nodeId) {
+  if (confirm('Delete this node?')) {
+    // Remove node
+    state.nodes = state.nodes.filter(n => n.id !== nodeId);
+    
+    // Remove connections
+    state.connections = state.connections.filter(c => 
+      c.from !== nodeId && c.to !== nodeId
+    );
+    
+    // Remove from other nodes' connections
+    state.nodes.forEach(node => {
+      node.connections.inputs = node.connections.inputs.filter(id => id !== nodeId);
+      node.connections.outputs = node.connections.outputs.filter(id => id !== nodeId);
+    });
+    
+    // Remove from DOM
+    document.getElementById(nodeId)?.remove();
+    
+    // Update connections
+    updateConnections();
+    saveToLocalStorage();
+  }
+}
+
+function clearWorkspace() {
+  if (confirm('Clear entire workspace?')) {
+    state.nodes = [];
+    state.connections = [];
+    workspace.innerHTML = '';
+    saveToLocalStorage();
+  }
+}
+
+function clearResponses() {
+  state.responses = [];
+  responseContent.innerHTML = '';
+}
+
+// UI Functions
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('active');
+}
+
+function openModelModal() {
+  modelModal.classList.add('active');
+}
+
+function closeModelModal() {
+  modelModal.classList.remove('active');
+}
+
+function openBatchModal() {
+  // Populate model selection
+  const modelSelection = document.getElementById('model-selection');
+  modelSelection.innerHTML = '';
+  
+  state.nodes.forEach(node => {
+    const model = state.models.find(m => m.id === node.modelId);
+    if (model) {
+      const div = document.createElement('div');
+      div.style.marginBottom = '8px';
+      div.innerHTML = `
+        <label style="display: flex; align-items: center; gap: 8px;">
+          <input type="checkbox" checked data-node-id="${node.id}">
+          <span>${model.name} (${model.type})</span>
+        </label>
+      `;
+      modelSelection.appendChild(div);
+    }
+  });
+  
+  batchModal.classList.add('active');
+}
+
+function closeBatchModal() {
+  batchModal.classList.remove('active');
+}
+
+function saveModel() {
+  const name = document.getElementById('model-name').value;
+  const type = document.getElementById('model-type').value;
+  const prompt = document.getElementById('model-prompt').value;
+  const temp = document.getElementById('model-temp').value;
+  const color = document.querySelector('.color-option.selected').dataset.color;
+  const icon = document.querySelector('.color-option.selected i').className;
+  
+  if (!name || !prompt) {
+    alert('Please fill in required fields');
+    return;
+  }
+  
+  const newModel = {
+    id: 'model_' + Date.now(),
+    name: name,
+    icon: icon,
+    color: color,
+    type: type,
+    prompt: prompt,
+    temperature: parseFloat(temp)
+  };
+  
+  state.models.push(newModel);
+  renderModelList();
+  closeModelModal();
+  
+  // Reset form
+  document.getElementById('model-name').value = '';
+  document.getElementById('model-prompt').value = '';
+}
+
+function executeBatchRun() {
+  const input = document.getElementById('batch-input').value;
+  const mode = document.getElementById('batch-mode').value;
+  
+  if (!input) {
+    alert('Please enter input text');
+    return;
+  }
+  
+  closeBatchModal();
+  runBatch(input, mode);
+}
+
+async function runBatch(input, mode) {
+  // Clear previous responses
+  state.responses = [];
+  responseContent.innerHTML = '<div class="loading"><span class="spinner"></span> Running batch...</div>';
+  
+  if (mode === 'parallel') {
+    // Run all selected models in parallel
+    const selectedNodes = getSelectedNodes();
+    await Promise.all(selectedNodes.map(async (node) => {
+      const model = state.models.find(m => m.id === node.modelId);
+      if (model) {
+        await callAI(node, model, input);
+      }
+    }));
+    
+  } else if (mode === 'sequential') {
+    // Run connected models sequentially
+    const selectedNodes = getSelectedNodes();
+    let currentInput = input;
+    
+    for (const node of selectedNodes) {
+      const model = state.models.find(m => m.id === node.modelId);
+      if (model) {
+        const response = await callAI(node, model, currentInput, true);
+        if (response) {
+          currentInput = response.content;
+        }
+      }
+    }
+    
+  } else if (mode === 'group') {
+    // Run disconnected groups separately
+    const selectedNodes = getSelectedNodes();
+    const groups = findDisconnectedGroups(selectedNodes);
+    
+    for (const group of groups) {
+      // Run each group
+      if (group.length === 1) {
+        // Single node
+        const node = group[0];
+        const model = state.models.find(m => m.id === node.modelId);
+        if (model) {
+          await callAI(node, model, input);
+        }
+      } else {
+        // Connected chain
+        let chainInput = input;
+        for (const node of group) {
+          const model = state.models.find(m => m.id === node.modelId);
+          if (model) {
+            const response = await callAI(node, model, chainInput, true);
+            if (response) {
+              chainInput = response.content;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+function getSelectedNodes() {
+  const checkboxes = document.querySelectorAll('#model-selection input[type="checkbox"]:checked');
+  const selectedIds = Array.from(checkboxes).map(cb => cb.dataset.nodeId);
+  return state.nodes.filter(node => selectedIds.includes(node.id));
+}
+
+function findDisconnectedGroups(nodes) {
+  const groups = [];
+  const visited = new Set();
+  
+  for (const node of nodes) {
+    if (!visited.has(node.id)) {
+      const group = [];
+      const queue = [node];
+      
+      while (queue.length > 0) {
+        const current = queue.shift();
+        if (!visited.has(current.id)) {
+          visited.add(current.id);
+          group.push(current);
+          
+          // Add connected nodes
+          const connections = [
+            ...current.connections.inputs,
+            ...current.connections.outputs
+          ];
+          
+          for (const connId of connections) {
+            const connectedNode = nodes.find(n => n.id === connId);
+            if (connectedNode && !visited.has(connectedNode.id)) {
+              queue.push(connectedNode);
+            }
+          }
+        }
+      }
+      
+      if (group.length > 0) {
+        groups.push(group);
+      }
+    }
+  }
+  
+  return groups;
+}
+
+function showTab(tabName) {
+  // Update active button
+  document.querySelectorAll('.nav-btn').forEach(btn => {
+    btn.classList.remove('active');
+  });
+  event.target.classList.add('active');
+  
+  // Show corresponding content
+  // Implement tab switching logic here
+}
+
+function saveWorkspace() {
+  const workspaceData = {
+    nodes: state.nodes,
+    connections: state.connections,
+    timestamp: new Date().toISOString()
+  };
+  
+  localStorage.setItem('ai-pipeline-workspace', JSON.stringify(workspaceData));
+  alert('Workspace saved!');
+}
+
+function loadWorkspace() {
+  const saved = localStorage.getItem('ai-pipeline-workspace');
+  if (saved) {
+    const data = JSON.parse(saved);
+    state.nodes = data.nodes || [];
+    state.connections = data.connections || [];
+    
+    // Clear and re-render
+    workspace.innerHTML = '';
+    state.nodes.forEach(node => {
+      const model = state.models.find(m => m.id === node.modelId);
+      if (model) {
+        renderNode(node, model);
+      }
+    });
+    updateConnections();
+    alert('Workspace loaded!');
+  } else {
+    alert('No saved workspace found');
+  }
+}
+
+function saveToLocalStorage() {
+  const workspaceData = {
+    nodes: state.nodes,
+    connections: state.connections,
+    timestamp: new Date().toISOString()
+  };
+  
+  localStorage.setItem('ai-pipeline-autosave', JSON.stringify(workspaceData));
+}
+
+function loadDefaultNodes() {
+  // Auto-load saved workspace
+  const saved = localStorage.getItem('ai-pipeline-autosave');
+  if (saved) {
+    const data = JSON.parse(saved);
+    state.nodes = data.nodes || [];
+    state.connections = data.connections || [];
+    
+    // Render saved nodes
+    state.nodes.forEach(node => {
+      const model = state.models.find(m => m.id === node.modelId);
+      if (model) {
+        renderNode(node, model);
+      }
+    });
+    updateConnections();
+  } else {
+    // Add some default nodes
+    setTimeout(() => {
+      if (state.models.length > 0) {
+        addNodeToWorkspace(state.models[0], 50, 50);
+        addNodeToWorkspace(state.models[1], 350, 50);
+        addNodeToWorkspace(state.models[2], 200, 250);
+      }
+    }, 500);
+  }
+}
+
+// Touch event handlers for mobile
+function handleTouchStart(e) {
+  if (e.target.closest('.ai-node') || e.target.closest('.connector')) return;
+  
+  // Prevent default to avoid scrolling when trying to connect
+  if (state.isConnecting) {
     e.preventDefault();
-    run();
   }
-});
+}
 
-// Close modals on outside click
-window.addEventListener('click', (e) => {
-  if (e.target === modal) {
-    modal.style.display = 'none';
+function handleTouchMove(e) {
+  if (state.isConnecting) {
+    e.preventDefault();
   }
-  if (!popup.contains(e.target) && e.target.id !== 'settings') {
-    popup.style.display = 'none';
-  }
-});
+}
 
-// Initialize
-renderList();
+function handleTouchEnd(e) {
+  // Touch handling is managed in individual handlers
+}
 </script>
 </body>
 </html>
